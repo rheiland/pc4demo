@@ -708,6 +708,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
         if self.rules_flag:
             self.rules_tab.xml_root = self.xml_root
+            self.rules_tab.clear_rules()
             self.rules_tab.fill_gui()   # do *after* populate_cell_defs() 
 
         if self.studio_flag:
@@ -1027,19 +1028,20 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
     def template_cb(self):
         self.load_model("template")
         if self.studio_flag:
-            self.run_tab.exec_name.setText('./project')
+            # self.run_tab.exec_name.setText('./project')
+            self.run_tab.exec_name.setText('project')
 
     def biorobots_cb(self):
         # self.load_model("biorobots")
         # self.load_model("biorobots_flat")
         self.load_model("biorobots")
         if self.studio_flag:
-            self.run_tab.exec_name.setText('./biorobots')
+            self.run_tab.exec_name.setText('biorobots')
 
     def tumor_immune_cb(self):
         self.load_model("tumor_immune")
         if self.studio_flag:
-            self.run_tab.exec_name.setText('./project')
+            self.run_tab.exec_name.setText('project')
 
     def cancer_biorobots_cb(self):
         self.load_model("cancer_biorobots")
