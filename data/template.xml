@@ -214,13 +214,7 @@
           <sample conserved="false" units="dimensionless" description="">1.0</sample>
         </custom_data>
       </cell_definition>
-
-    <cell_rules type="csv" enabled="false">
-        <folder>../data</folder>
-        <filename>template_rules.csv</filename>
-        </cell_rules>
-
-        </cell_definitions>
+    </cell_definitions>
 	
 	<initial_conditions>
 		<cell_positions type="csv" enabled="false">
@@ -232,8 +226,8 @@
     <cell_rules>
         <rulesets>
             <ruleset protocol="CBHG" version="2.0" format="csv" enabled="false">
-                <folder>../data</folder>
-                <filename>template_rules.csv</filename>
+                <folder></folder>
+                <filename></filename>
             </ruleset>
         </rulesets>
         <settings />
