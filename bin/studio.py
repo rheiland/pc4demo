@@ -634,6 +634,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.nanohub_flag:
             self.download_menu = file_menu.addMenu('Download')
             self.download_config_item = self.download_menu.addAction("Download config.xml", self.download_config_cb)
+            self.download_rules_item = self.download_menu.addAction("Download rules.csv", self.download_rules_cb)
             self.download_svg_item = self.download_menu.addAction("Download SVG", self.download_svg_cb)
             self.download_mat_item = self.download_menu.addAction("Download binary (.mat) data", self.download_full_cb)
             # self.download_menu_item.setEnabled(False)
@@ -1138,6 +1139,23 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                 self.p.finished.connect(self.process_finished)  # Clean up once complete.
 
                 self.p.start("exportfile config.xml")
+        return
+
+    def download_rules_cb(self):
+        if self.nanohub_flag:
+            try:
+                if self.p is None:  # No process running.
+                    self.p = QProcess()
+                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
+                    self.p.readyReadStandardError.connect(self.handle_stderr)
+                    self.p.stateChanged.connect(self.handle_state)
+                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
+
+                    self.p.start("exportfile rules.csv")
+            except:
+                self.message("Unable to download rules.csv")
+                print("Unable to download rules.csv")
+                self.p = None
         return
 
     def download_svg_cb(self):
