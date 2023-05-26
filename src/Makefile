@@ -1,5 +1,6 @@
 VERSION := $(shell grep . VERSION.txt | cut -f1 -d:)
-PROGRAM_NAME:= project
+PROGRAM_NAME0:= project
+PROGRAM_NAME1:= biorobots
 
 osRelease = $(shell lsb_release -r | sed -e "s/Release:\W*//" -e "s/\..*//")
 ifeq ($(osRelease),7)
@@ -93,12 +94,20 @@ PhysiCell_OBJECTS := $(BioFVM_OBJECTS)  $(pugixml_OBJECTS) $(PhysiCell_core_OBJE
 
 #ALL_OBJECTS4 := $(PhysiCell_OBJECTS) interactions.o
 
-ALL_OBJECTS := $(PhysiCell_OBJECTS) $(rules_custom_module_OBJECTS)
+#ALL_OBJECTS := $(PhysiCell_OBJECTS) $(rules_custom_module_OBJECTS)
+
+ALL_OBJECTS0 := $(PhysiCell_OBJECTS) custom.o
+ALL_OBJECTS1 := $(PhysiCell_OBJECTS) biorobots.o
 
 # compile the project 
 
-all: main.cpp $(ALL_OBJECTS) 
-	$(COMPILE_COMMAND) -o $(PROGRAM_NAME) $(ALL_OBJECTS) main.cpp 
+#all: main.cpp $(ALL_OBJECTS) 
+#	$(COMPILE_COMMAND) -o $(PROGRAM_NAME) $(ALL_OBJECTS) main.cpp 
+
+all: main.cpp $(ALL_OBJECTS0) $(ALL_OBJECTS1)
+	$(COMPILE_COMMAND) -o $(PROGRAM_NAME0) $(ALL_OBJECTS0) main.cpp 
+	$(COMPILE_COMMAND) -o $(PROGRAM_NAME1) $(ALL_OBJECTS1) main.cpp 
+#	$(COMPILE_COMMAND) -o $(PROGRAM_NAME1) $(ALL_OBJECTS1) main-biorobots.cpp 
 
 # PhysiCell core components	
 
@@ -194,6 +203,8 @@ PhysiCell_geometry.o: ./modules/PhysiCell_geometry.cpp
 
 custom.o: ./custom_modules/custom.cpp 
 	$(COMPILE_COMMAND) -c ./custom_modules/custom.cpp
+biorobots.o: ./custom_modules/biorobots.cpp 
+	$(COMPILE_COMMAND) -c ./custom_modules/biorobots.cpp
 #interactions.o: ./custom_modules/interactions.cpp 
 #	$(COMPILE_COMMAND) -c ./custom_modules/interactions.cpp
 
@@ -201,16 +212,19 @@ custom.o: ./custom_modules/custom.cpp
 # next targets for nanoHUB
 install: 
 	$(MODINIT); $(MODCMD); make all
-	install --mode 0755 -D $(PROGRAM_NAME) $(BIN)/$(PROGRAM_NAME)
+	install --mode 0755 -D $(PROGRAM_NAME0) $(BIN)/$(PROGRAM_NAME0)
+	install --mode 0755 -D $(PROGRAM_NAME1) $(BIN)/$(PROGRAM_NAME1)
 
 distclean: clean
-	rm -f $(BIN)/$(PROGRAM_NAME)
+	rm -f $(BIN)/$(PROGRAM_NAME0)
+	rm -f $(BIN)/$(PROGRAM_NAME1)
 	rm -rf $(BIN)/__pycache__
 	rm -rf ../.ipynb_checkpoints
 
 clean:
 	rm -f *.o
-	rm -f $(PROGRAM_NAME)
+	rm -f $(PROGRAM_NAME0)
+	rm -f $(PROGRAM_NAME1)
 	
 data-cleanup:
 	rm -rf ./output
