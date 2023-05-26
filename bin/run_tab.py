@@ -191,6 +191,8 @@ class RunModel(QWidget):
                     tdir = os.path.abspath('tmpdir')
                     new_config_file = Path(tdir,"config.xml")
                     self.output_dir = '.'
+                    self.rules_tab.rules_folder.setText(".")   # i.e., in /tmpdir where we run from
+                    self.rules_tab.rules_file.setText("rules.csv")
                 else:
                     self.output_dir = self.config_tab.folder.text()
                     os.system('rm -rf ' + self.output_dir)
