@@ -95,6 +95,7 @@ class FilterUI2DWindow(QWidget):
         glayout.addWidget(self.contour_mesh_checkbox, idx_row,0,1,1) # w, row, column, rowspan, colspan
 
         self.contour_smooth_checkbox = QCheckBox_custom('smooth')
+        self.contour_smooth_checkbox.setChecked(True)
         self.contour_smooth_checkbox.clicked.connect(self.contour_smooth_cb)
         glayout.addWidget(self.contour_smooth_checkbox, idx_row,1,1,1) # w, row, column, rowspan, colspan
 
