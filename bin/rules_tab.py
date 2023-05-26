@@ -1785,7 +1785,7 @@ class Rules(QWidget):
                 if folder_name == None:
                     msg += " rules file "
                 msg += " missing from .xml"
-                self.show_warning(msg)
+                # self.show_warning(msg)
 
                 self.rules_folder.setText("")
                 self.rules_file.setText("")
