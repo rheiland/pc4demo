@@ -1043,6 +1043,8 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         self.load_model("tumor_immune")
         if self.studio_flag:
             self.run_tab.exec_name.setText('project')
+        if self.nanohub_flag:
+            self.config_tab.csv_folder.setText(self.absolute_data_dir)
 
     def cancer_biorobots_cb(self):
         self.load_model("cancer_biorobots")
