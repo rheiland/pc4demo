@@ -1148,6 +1148,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.debug_tab.add_msg("download_config_cb() ------------")
             try:
                 if self.p is None:  # No process running.
+                    self.debug_tab.add_msg("   self.p is None; create QProcess()")
                     self.p = QProcess()
                     self.p.readyReadStandardOutput.connect(self.handle_stdout)
                     self.p.readyReadStandardError.connect(self.handle_stderr)
@@ -1158,10 +1159,12 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                     self.debug_tab.add_msg("  cwd= " + os.getcwd())
                     
                     self.p.start("exportfile config.xml")
+                else:
+                    self.debug_tab.add_msg("   self.p is NOT None; just return!")
             except:
                 self.message("Unable to download config.xml")
                 print("Unable to download config.xml")
-                # self.p = None
+                self.p = None
         return
 
     def download_rules_cb(self):
@@ -1175,10 +1178,12 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                     self.p.finished.connect(self.process_finished)  # Clean up once complete.
 
                     self.p.start("exportfile rules.csv")
+                else:
+                    self.debug_tab.add_msg(" download_rules_cb():  self.p is NOT None; just return!")
             except:
                 self.message("Unable to download rules.csv")
                 print("Unable to download rules.csv")
-                # self.p = None
+                self.p = None
         return
 
     def download_svg_cb(self):
@@ -1198,10 +1203,12 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                         for f in glob.glob(file_str):
                             myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
                     self.p.start("exportfile svg.zip")
+                else:
+                    self.debug_tab.add_msg(" download_svg_cb():  self.p is NOT None; just return!")
             except:
                 self.message("Unable to download svg.zip")
                 print("Unable to download svg.zip")
-                # self.p = None
+                self.p = None
         return
 
     def download_full_cb(self):
@@ -1225,10 +1232,12 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                         for f in glob.glob(file_mat):
                             myzip.write(f, os.path.basename(f))
                     self.p.start("exportfile mcds.zip")
+                else:
+                    self.debug_tab.add_msg(" download_full_cb():  self.p is NOT None; just return!")
             except:
                 self.message("Unable to download mcds.zip")
                 print("Unable to download mcds.zip")
-                # self.p = None
+                self.p = None
         return
 
     def biorobots_nanohub_cb(self):
