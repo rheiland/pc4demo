@@ -407,13 +407,13 @@ class Rules(QWidget):
 
         #---
         label = QLabel("")
-        lwidth = 120
+        lwidth = 60
         label.setFixedWidth(lwidth)
         hlayout.addWidget(label) 
 
         #---
-        label = QLabel("Max")
-        label.setFixedWidth(30)
+        label = QLabel("Max response")
+        label.setFixedWidth(90)
         # label.setAlignment(QtCore.Qt.AlignRight)
         label.setAlignment(QtCore.Qt.AlignCenter)
         hlayout.addWidget(label) 
