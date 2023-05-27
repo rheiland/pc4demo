@@ -1273,7 +1273,7 @@ def main():
     skip_validate_flag = False
     nanohub_flag = False
     is_movable_flag = False
-    debug_flag = False
+    debug_flag = True
     try:
         parser = argparse.ArgumentParser(description='PhysiCell Studio.')
 
