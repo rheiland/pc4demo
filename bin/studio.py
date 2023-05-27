@@ -1149,15 +1149,13 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             try:
                 if self.p is None:  # No process running.
                     self.debug_tab.add_msg("   self.p is None; create QProcess()")
+                    self.debug_tab.add_msg("  cwd= " + os.getcwd())
+                    self.debug_tab.add_msg("doing: exportfile config.xml")
                     self.p = QProcess()
                     self.p.readyReadStandardOutput.connect(self.handle_stdout)
                     self.p.readyReadStandardError.connect(self.handle_stderr)
                     self.p.stateChanged.connect(self.handle_state)
                     self.p.finished.connect(self.process_finished)  # Clean up once complete.
-
-                    self.debug_tab.add_msg("doing: exportfile config.xml")
-                    self.debug_tab.add_msg("  cwd= " + os.getcwd())
-                    
                     self.p.start("exportfile config.xml")
                 else:
                     self.debug_tab.add_msg("   self.p is NOT None; just return!")
