@@ -1145,6 +1145,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
     def download_config_cb(self):
         if self.nanohub_flag:
+            self.debug_tab.add_msg("download_config_cb() ------------")
             try:
                 if self.p is None:  # No process running.
                     self.p = QProcess()
