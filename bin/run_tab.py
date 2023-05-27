@@ -184,8 +184,11 @@ class RunModel(QWidget):
                     time.sleep(1)
                     if os.path.isdir('tmpdir'):
                         # something on NFS causing issues...
-                        tname = tempfile.mkdtemp(suffix='.bak', prefix='tmpdir_', dir='.')
-                        shutil.move('tmpdir', tname)
+                        try:
+                            tname = tempfile.mkdtemp(suffix='.bak', prefix='tmpdir_', dir='.')
+                            shutil.move('tmpdir', tname)
+                        except:
+                            pass
                     os.makedirs('tmpdir')
 
                     # write the default config file to tmpdir
