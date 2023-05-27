@@ -332,7 +332,8 @@ class PhysiCellXMLCreator(QWidget):
 
             if self.nanohub_flag:  # rwh - test if works on nanoHUB
                 print("studio.py: ---- TRUE nanohub_flag: updating ics_tab folder")
-                self.ics_tab.csv_folder.setText('')
+                # self.ics_tab.csv_folder.setText('')
+                self.ics_tab.csv_folder.setText(self.absolute_data_dir)
                 self.ics_tab.csv_folder.setEnabled(False)
             else:
                 print("studio.py: ---- FALSE nanohub_flag: NOT updating ics_tab folder")
