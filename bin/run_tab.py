@@ -189,7 +189,10 @@ class RunModel(QWidget):
                             shutil.move('tmpdir', tname)
                         except:
                             pass
-                    os.makedirs('tmpdir')
+                    try:
+                        os.makedirs('tmpdir')
+                    except:
+                        pass
 
                     # write the default config file to tmpdir
                     # new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
