@@ -1179,42 +1179,52 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
     def download_svg_cb(self):
         if self.nanohub_flag:
-            if self.p is None:  # No process running.
-                self.p = QProcess()
-                self.p.readyReadStandardOutput.connect(self.handle_stdout)
-                self.p.readyReadStandardError.connect(self.handle_stderr)
-                self.p.stateChanged.connect(self.handle_state)
-                self.p.finished.connect(self.process_finished)  # Clean up once complete.
+            try:
+                if self.p is None:  # No process running.
+                    self.p = QProcess()
+                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
+                    self.p.readyReadStandardError.connect(self.handle_stderr)
+                    self.p.stateChanged.connect(self.handle_state)
+                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
 
-                # file_str = os.path.join(self.output_dir, '*.svg')
-                file_str = "*.svg"
-                print('-------- download_svg_cb(): zip up all ',file_str)
-                with zipfile.ZipFile('svg.zip', 'w') as myzip:
-                    for f in glob.glob(file_str):
-                        myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-                self.p.start("exportfile svg.zip")
+                    # file_str = os.path.join(self.output_dir, '*.svg')
+                    file_str = "*.svg"
+                    print('-------- download_svg_cb(): zip up all ',file_str)
+                    with zipfile.ZipFile('svg.zip', 'w') as myzip:
+                        for f in glob.glob(file_str):
+                            myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                    self.p.start("exportfile svg.zip")
+            except:
+                self.message("Unable to download svg.zip")
+                print("Unable to download svg.zip")
+                self.p = None
         return
 
     def download_full_cb(self):
         if self.nanohub_flag:
-            if self.p is None:  # No process running.
-                self.p = QProcess()
-                self.p.readyReadStandardOutput.connect(self.handle_stdout)
-                self.p.readyReadStandardError.connect(self.handle_stderr)
-                self.p.stateChanged.connect(self.handle_state)
-                self.p.finished.connect(self.process_finished)  # Clean up once complete.
+            try:
+                if self.p is None:  # No process running.
+                    self.p = QProcess()
+                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
+                    self.p.readyReadStandardError.connect(self.handle_stderr)
+                    self.p.stateChanged.connect(self.handle_state)
+                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
 
-                # file_xml = os.path.join(self.output_dir, '*.xml')
-                # file_mat = os.path.join(self.output_dir, '*.mat')
-                file_xml = '*.xml'
-                file_mat = '*.mat'
-                print('-------- download_full_cb(): zip up all .xml and .mat')
-                with zipfile.ZipFile('mcds.zip', 'w') as myzip:
-                    for f in glob.glob(file_xml):
-                        myzip.write(f, os.path.basename(f)) # 2nd arg avoids full filename path in the archive
-                    for f in glob.glob(file_mat):
-                        myzip.write(f, os.path.basename(f))
-                self.p.start("exportfile mcds.zip")
+                    # file_xml = os.path.join(self.output_dir, '*.xml')
+                    # file_mat = os.path.join(self.output_dir, '*.mat')
+                    file_xml = '*.xml'
+                    file_mat = '*.mat'
+                    print('-------- download_full_cb(): zip up all .xml and .mat')
+                    with zipfile.ZipFile('mcds.zip', 'w') as myzip:
+                        for f in glob.glob(file_xml):
+                            myzip.write(f, os.path.basename(f)) # 2nd arg avoids full filename path in the archive
+                        for f in glob.glob(file_mat):
+                            myzip.write(f, os.path.basename(f))
+                    self.p.start("exportfile mcds.zip")
+            except:
+                self.message("Unable to download mcds.zip")
+                print("Unable to download mcds.zip")
+                self.p = None
         return
 
     def biorobots_nanohub_cb(self):
