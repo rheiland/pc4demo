@@ -134,10 +134,14 @@ class PhysiCellXMLCreator(QWidget):
                 self.nanohub_flag = True
 
         if self.nanohub_flag:
-            binDirectory = os.path.dirname(os.path.abspath(__file__))
-            dataDirectory = os.path.join(binDirectory,'..','data')
-            print("-------- dataDirectory (relative) =",dataDirectory)
-            self.absolute_data_dir = os.path.abspath(dataDirectory)
+            # binDirectory = os.path.dirname(os.path.abspath(__file__))
+            # dataDirectory = os.path.join(binDirectory,'..','data')
+
+            # dataDirectory = os.path.join(binDirectory,'..','data')
+            # better yet, use  os.getenv['TOOLPATH']
+            tool_dir = os.getenv['TOOLPATH']
+            dataDirectory = os.path.join(tool_dir,'data')
+            self.absolute_data_dir = os.path.abspath(dataDirectory)  # not needed?
             print("-------- absolute_data_dir =",self.absolute_data_dir)
 
             # NOTE: if your C++ needs to also have an absolute path to data dir, do so via an env var
@@ -1044,6 +1048,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.studio_flag:
             self.run_tab.exec_name.setText('project')
         if self.nanohub_flag:
+            # self.config_tab.csv_folder.setText(self.absolute_data_dir)
             self.config_tab.csv_folder.setText(self.absolute_data_dir)
 
     def cancer_biorobots_cb(self):
