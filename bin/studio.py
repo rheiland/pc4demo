@@ -1153,11 +1153,14 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                     self.p.stateChanged.connect(self.handle_state)
                     self.p.finished.connect(self.process_finished)  # Clean up once complete.
 
+                    self.debug_tab.add_msg("doing: exportfile config.xml")
+                    self.debug_tab.add_msg("  cwd= " + os.getcwd())
+                    
                     self.p.start("exportfile config.xml")
             except:
                 self.message("Unable to download config.xml")
                 print("Unable to download config.xml")
-                self.p = None
+                # self.p = None
         return
 
     def download_rules_cb(self):
@@ -1174,7 +1177,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             except:
                 self.message("Unable to download rules.csv")
                 print("Unable to download rules.csv")
-                self.p = None
+                # self.p = None
         return
 
     def download_svg_cb(self):
@@ -1197,7 +1200,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             except:
                 self.message("Unable to download svg.zip")
                 print("Unable to download svg.zip")
-                self.p = None
+                # self.p = None
         return
 
     def download_full_cb(self):
@@ -1224,7 +1227,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             except:
                 self.message("Unable to download mcds.zip")
                 print("Unable to download mcds.zip")
-                self.p = None
+                # self.p = None
         return
 
     def biorobots_nanohub_cb(self):

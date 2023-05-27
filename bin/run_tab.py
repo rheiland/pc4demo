@@ -175,24 +175,25 @@ class RunModel(QWidget):
             if True: # copy normal workflow of an app, strange as it is
                 # make sure we are where we started (app's root dir)
                 # logging.debug(f'\n------>>>> doing os.chdir to {self.current_dir}')
-                os.chdir(self.current_dir)
+                os.chdir(self.current_dir)  # session root dir on nanoHUB (not /tmpdir)
                 self.debug_tab.add_msg("run_tab: chdir to "+self.current_dir)
                 # remove any previous data
                 # NOTE: this dir name needs to match the <folder>  in /data/<config_file.xml>
                 if self.nanohub_flag:
                     os.system('rm -rf tmpdir*')
-                    time.sleep(1)
+                    time.sleep(2)
                     if os.path.isdir('tmpdir'):
                         # something on NFS causing issues...
                         try:
                             tname = tempfile.mkdtemp(suffix='.bak', prefix='tmpdir_', dir='.')
                             shutil.move('tmpdir', tname)
                         except:
-                            pass
+                            self.debug_tab.add_msg("run_tab: NFS exception; unable to clean tmpdir")
                     try:
+                        self.debug_tab.add_msg("run_tab: doing os.makedirs(tmpdir)")
                         os.makedirs('tmpdir')
                     except:
-                        pass
+                        self.debug_tab.add_msg("run_tab: exception with os.makedirs(tmpdir)")
 
                     # write the default config file to tmpdir
                     # new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
@@ -217,6 +218,7 @@ class RunModel(QWidget):
 
                 if not self.update_xml_from_gui():
                     # self.run_button.setEnabled(True)
+                    self.debug_tab.add_msg("run_tab: Oops. update_xml_from_gui() returned False. Return")
                     self.enable_run(True)
                     return
 
@@ -224,11 +226,14 @@ class RunModel(QWidget):
                 # print("run_tab.py: ----> new_config_file = ",new_config_file)
                 # print("run_tab.py: ----> self.config_file = ",self.config_file)
                 if self.nanohub_flag:
-                    self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
-                    self.debug_tab.add_msg("run_tab: writing config to "+str(new_config_file))
+                    # self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
+                    # self.debug_tab.add_msg("run_tab: writing config to "+str(new_config_file))
                     # Operate from tmpdir. XML: <folder>,</folder>; temporary output goes here.  May be copied to cache later.
                     tdir = os.path.abspath('tmpdir')
                     os.chdir(tdir)   # run exec from here on nanoHUB
+
+                    self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
+                    self.debug_tab.add_msg("run_tab: writing config to "+str(new_config_file))
 
                     # save current table of rules in /tmpdir (where we are now)
                     self.debug_tab.add_msg("run_tab: setting rules dir: "+tdir)
