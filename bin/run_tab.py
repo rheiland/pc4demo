@@ -199,6 +199,7 @@ class RunModel(QWidget):
                     tdir = os.path.abspath('tmpdir')
                     new_config_file = Path(tdir,"config.xml")
                     self.output_dir = '.'
+                    self.config_xml_name.setText('config.xml')
                 else:
                     self.output_dir = self.config_tab.folder.text()
                     os.system('rm -rf ' + self.output_dir)
@@ -235,6 +236,7 @@ class RunModel(QWidget):
                     self.rules_tab.rules_folder.setText(tdir)  # rwh: will nanoHUB like this? 
                     self.rules_tab.rules_file.setText("rules.csv")
                     self.rules_tab.save_rules_cb()  
+
                 else:
                     self.tree.write(self.config_file)
                     # print("run_tab.py: ----> here 5")
