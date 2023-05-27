@@ -102,7 +102,8 @@ class Vis(VisBase, QWidget):
         self.cell_alpha = 0.5
 
         self.num_contours = 50
-        self.shading_choice = 'auto'  # 'auto'(was 'flat') vs. 'gouraud' (smooth)
+        # self.shading_choice = 'auto'  # 'auto'(was 'flat') vs. 'gouraud' (smooth)
+        self.shading_choice = 'gouraud'  # 'auto'(was 'flat') vs. 'gouraud' (smooth)
 
         self.fontsize = 7
         self.label_fontsize = 6
