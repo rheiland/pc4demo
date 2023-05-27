@@ -139,7 +139,7 @@ class PhysiCellXMLCreator(QWidget):
 
             # dataDirectory = os.path.join(binDirectory,'..','data')
             # better yet, use  os.getenv['TOOLPATH']
-            tool_dir = os.getenv['TOOLPATH']
+            tool_dir = os.getenv('TOOLPATH')
             dataDirectory = os.path.join(tool_dir,'data')
             self.absolute_data_dir = os.path.abspath(dataDirectory)  # not needed?
             print("-------- absolute_data_dir =",self.absolute_data_dir)
