@@ -43,6 +43,7 @@ except:
 from ics_tab import ICs
 from populate_tree_cell_defs import populate_tree_cell_defs
 from run_tab import RunModel 
+from debug_tab import Debug   # nanohub
 # from legend_tab import Legend 
 
 try:
@@ -78,7 +79,7 @@ def quit_cb():
 
   
 class PhysiCellXMLCreator(QWidget):
-    def __init__(self, config_file, studio_flag, skip_validate_flag, rules_flag, model3D_flag, tensor_flag, exec_file, nanohub_flag, is_movable_flag, parent = None):
+    def __init__(self, config_file, studio_flag, skip_validate_flag, rules_flag, model3D_flag, tensor_flag, exec_file, nanohub_flag, is_movable_flag, debug_flag, parent = None):
         super(PhysiCellXMLCreator, self).__init__(parent)
         if model3D_flag:
             try:
@@ -102,6 +103,7 @@ class PhysiCellXMLCreator(QWidget):
         self.model3D_flag = model3D_flag 
         self.tensor_flag = tensor_flag 
         self.nanohub_flag = nanohub_flag 
+        self.debug_flag = debug_flag 
         print("PhysiCellXMLCreator(): self.nanohub_flag= ",self.nanohub_flag)
 
         self.rules_tab_index = None
@@ -422,6 +424,11 @@ class PhysiCellXMLCreator(QWidget):
             # legend_file = os.path.join(self.vis_tab.output_dir, 'legend.svg')  # hardcoded filename :(
             # if Path(legend_file).is_file():
             #     self.legend_tab.reload_legend()
+
+            if self.debug_flag:
+                self.debug_tab = Debug()
+                self.tabWidget.addTab(self.debug_tab,"Debug")
+                self.run_tab.debug_tab = self.debug_tab
 
             self.vis_tab.reset_model()
             
@@ -1266,6 +1273,7 @@ def main():
     skip_validate_flag = False
     nanohub_flag = False
     is_movable_flag = False
+    debug_flag = False
     try:
         parser = argparse.ArgumentParser(description='PhysiCell Studio.')
 
@@ -1414,7 +1422,7 @@ def main():
             # print("Warning: Rules module not found.\n")
 
     # print("calling PhysiCellXMLCreator with rules_flag= ",rules_flag)
-    ex = PhysiCellXMLCreator(config_file, studio_flag, skip_validate_flag, rules_flag, model3D_flag, tensor_flag, exec_file, nanohub_flag, is_movable_flag)
+    ex = PhysiCellXMLCreator(config_file, studio_flag, skip_validate_flag, rules_flag, model3D_flag, tensor_flag, exec_file, nanohub_flag, is_movable_flag, debug_flag)
     print("size=",ex.size())  # = PyQt5.QtCore.QSize(1100, 770)
     # ex.setFixedWidth(1101)  # = PyQt5.QtCore.QSize(1100, 770)
     # print("width=",ex.size())

@@ -49,6 +49,7 @@ class RunModel(QWidget):
         self.user_params_tab = None
         self.rules_tab = None
         self.vis_tab = None
+        self.debug_tab = None
         # self.legend_tab = None
 
         self.tree = None
@@ -175,6 +176,7 @@ class RunModel(QWidget):
                 # make sure we are where we started (app's root dir)
                 # logging.debug(f'\n------>>>> doing os.chdir to {self.current_dir}')
                 os.chdir(self.current_dir)
+                self.debug_tab.add_msg("run_tab: chdir to "+self.current_dir)
                 # remove any previous data
                 # NOTE: this dir name needs to match the <folder>  in /data/<config_file.xml>
                 if self.nanohub_flag:
@@ -191,8 +193,6 @@ class RunModel(QWidget):
                     tdir = os.path.abspath('tmpdir')
                     new_config_file = Path(tdir,"config.xml")
                     self.output_dir = '.'
-                    self.rules_tab.rules_folder.setText(".")   # i.e., in /tmpdir where we run from
-                    self.rules_tab.rules_file.setText("rules.csv")
                 else:
                     self.output_dir = self.config_tab.folder.text()
                     os.system('rm -rf ' + self.output_dir)
@@ -218,9 +218,17 @@ class RunModel(QWidget):
                 # print("run_tab.py: ----> self.config_file = ",self.config_file)
                 if self.nanohub_flag:
                     self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
+                    self.debug_tab.add_msg("run_tab: writing config to "+new_config_file)
                     # Operate from tmpdir. XML: <folder>,</folder>; temporary output goes here.  May be copied to cache later.
                     tdir = os.path.abspath('tmpdir')
                     os.chdir(tdir)   # run exec from here on nanoHUB
+
+                    # save current table of rules in /tmpdir (where we are now)
+                    self.debug_tab.add_msg("run_tab: setting rules dir: "+tdir)
+                    # self.rules_tab.rules_folder.setText(".")  # rwh: will nanoHUB not like this? 
+                    self.rules_tab.rules_folder.setText(tdir)  # rwh: will nanoHUB like this? 
+                    self.rules_tab.rules_file.setText("rules.csv")
+                    self.rules_tab.save_rules_cb()  
                 else:
                     self.tree.write(self.config_file)
                     # print("run_tab.py: ----> here 5")
