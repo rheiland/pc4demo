@@ -616,8 +616,8 @@ class Rules(QWidget):
         label.setAlignment(QtCore.Qt.AlignCenter)
         hbox1.addWidget(label) 
         self.rules_folder = QLineEdit()
-        if self.nanohub_flag:
-            self.rules_folder.setEnabled(False)
+        # if self.nanohub_flag:
+            # self.rules_folder.setEnabled(False)
         self.rules_folder.setFixedWidth(200)
         # self.rules_folder.setAlignment(QtCore.Qt.AlignLeft)
         hbox1.addWidget(self.rules_folder) 
