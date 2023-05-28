@@ -335,7 +335,7 @@ class PhysiCellXMLCreator(QWidget):
                 # self.ics_tab.csv_folder.setText('')
                 self.config_tab.csv_folder.setText(self.absolute_data_dir)
                 self.config_tab.csv_folder.setEnabled(False)
-                # self.config_tab.output_file.setText("mycells.csv")
+                self.config_tab.csv_file.setText("mycells.csv")
 
                 self.ics_tab.csv_folder.setText(self.absolute_data_dir)
                 self.ics_tab.csv_folder.setEnabled(False)
