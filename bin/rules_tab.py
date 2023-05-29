@@ -1649,9 +1649,16 @@ class Rules(QWidget):
         return
 
     #-----------------------------------------------------------
+    def clear_comboboxes(self):
+        self.celltype_combobox.clear()
+        self.signal_combobox.clear()
+        self.response_combobox.clear()
+
+    #-----------------------------------------------------------
     def fill_signals_widget(self):
         # print("\n rules_tab:-------------------fill_signals_widget()")
         self.signal_l.clear()
+        self.signal_combobox.clear()
 
         for s in self.substrates:
             self.signal_l.append(s)
@@ -1689,6 +1696,7 @@ class Rules(QWidget):
     #-----------------------------------------------------------
     def fill_responses_widget(self):
         self.response_l.clear()
+        self.response_combobox.clear()
 
         # TODO: figure out how best to organize these responses
         for s in self.substrates:
@@ -1743,6 +1751,7 @@ class Rules(QWidget):
     def fill_gui(self):
         # logging.debug(f'\n\n------------\nrules_tab.py: fill_gui():')
         print(f'\n\n------------\nrules_tab.py: fill_gui():')
+        self.clear_comboboxes()
 
         # print("rules_tab.py: fill_gui(): self.celldef_tab.param_d.keys()= ",self.celldef_tab.param_d.keys())
         for key in self.celldef_tab.param_d.keys():
