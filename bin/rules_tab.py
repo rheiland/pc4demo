@@ -334,9 +334,11 @@ class Rules(QWidget):
         hlayout = QHBoxLayout()
         # hlayout.addStretch(0)
 
+        wwidth = 280
         # self.signal_combobox = QComboBox()
         self.signal_model = QStandardItemModel()
         self.signal_combobox = ExtendedCombo()
+        self.signal_combobox.setFixedWidth(wwidth)
         self.signal_combobox.setModel(self.signal_model)
         self.signal_combobox.setModelColumn(0)
 
@@ -348,6 +350,7 @@ class Rules(QWidget):
         # Behavior combobox
         self.response_model = QStandardItemModel()
         self.response_combobox = ExtendedCombo()
+        self.response_combobox.setFixedWidth(wwidth)
         self.response_combobox.setModel(self.response_model)
         self.response_combobox.setModelColumn(0)
         self.response_combobox.currentIndexChanged.connect(self.response_combobox_changed_cb)  
