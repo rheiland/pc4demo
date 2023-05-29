@@ -294,6 +294,7 @@ class RunModel(QWidget):
                 print("\n--- run_tab:  xml_str before run is ",xml_str)
                 if self.nanohub_flag:
                     self.p.start("submit",["--local",exec_str,xml_str])
+                    self.debug_tab.add_msg("run_tab: submit --local "+exec_str + " "+xml_str)
                 else:
                     # logging.debug(f'\nrun_tab.py: running: {exec_str}, {xml_str}')
                     self.p.start(exec_str, [xml_str])
@@ -315,12 +316,16 @@ class RunModel(QWidget):
 
     def cancel_model_cb(self):
         # logging.debug(f'===========  cancel_model_cb():  ============')
+        self.debug_tab.add_msg("run_tab: cancel_model_cb() -------")
         if self.p:  # process running.
+            self.debug_tab.add_msg("   cancel_model_cb(): self.p is not None. Try to kill it.")
             self.p.kill()
             self.p.terminate()
-            self.p = None
+            # self.p = None
             # self.run_button.setEnabled(True)
             self.enable_run(True)
+        else:
+            self.debug_tab.add_msg("   cancel_model_cb(): self.p is None")
 
     def handle_stderr(self):
         data = self.p.readAllStandardError()
