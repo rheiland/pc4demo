@@ -381,7 +381,7 @@ class Config(QWidget):
         self.csv_folder = QLineEdit()
         self.csv_folder.setFixedWidth(filename_width)
         if self.nanohub_flag:
-            self.folder.setEnabled(False)
+            self.csv_folder.setEnabled(False)
         hbox.addWidget(self.csv_folder)
 
         label = QLabel("file")
@@ -687,7 +687,7 @@ class Config(QWidget):
         self.xml_root.find(".//dt_mechanics").text = self.mechanics_dt.text()
         self.xml_root.find(".//dt_phenotype").text = self.phenotype_dt.text()
         self.xml_root.find(".//omp_num_threads").text = self.num_threads.text()
-        self.xml_root.find(".//folder").text = self.folder.text()
+        self.xml_root.find(".//save//folder").text = self.folder.text()
         # print(f'------- config_tab.py: fill_xml(): setting folder = {self.folder.text()}')
 
         if self.save_svg.isChecked():
