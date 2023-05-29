@@ -1650,15 +1650,22 @@ class Rules(QWidget):
 
     #-----------------------------------------------------------
     def clear_comboboxes(self):
+        # self.substrates.clear()
+        self.signal_l.clear()
+        self.response_l.clear()
+
         self.celltype_combobox.clear()
         self.signal_combobox.clear()
         self.response_combobox.clear()
 
     #-----------------------------------------------------------
     def fill_signals_widget(self):
-        # print("\n rules_tab:-------------------fill_signals_widget()")
+        print("\n rules_tab:-------------------fill_signals_widget()")
+        # self.substrates.clear()
         self.signal_l.clear()
         self.signal_combobox.clear()
+
+        print("\n       fill_signals_widget(): self.substrates= ",self.substrates)
 
         for s in self.substrates:
             self.signal_l.append(s)
@@ -1695,6 +1702,7 @@ class Rules(QWidget):
 
     #-----------------------------------------------------------
     def fill_responses_widget(self):
+        # self.substrates.clear()
         self.response_l.clear()
         self.response_combobox.clear()
 
@@ -1751,6 +1759,7 @@ class Rules(QWidget):
     def fill_gui(self):
         # logging.debug(f'\n\n------------\nrules_tab.py: fill_gui():')
         print(f'\n\n------------\nrules_tab.py: fill_gui():')
+
         self.clear_comboboxes()
 
         # print("rules_tab.py: fill_gui(): self.celldef_tab.param_d.keys()= ",self.celldef_tab.param_d.keys())
