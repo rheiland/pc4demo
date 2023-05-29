@@ -295,6 +295,7 @@ class RunModel(QWidget):
                 if self.nanohub_flag:
                     self.p.start("submit",["--local",exec_str,xml_str])
                     self.debug_tab.add_msg("run_tab: submit --local "+exec_str + " "+xml_str)
+                    self.debug_tab.add_msg("self.p = "+str(self.p))
                 else:
                     # logging.debug(f'\nrun_tab.py: running: {exec_str}, {xml_str}')
                     self.p.start(exec_str, [xml_str])
