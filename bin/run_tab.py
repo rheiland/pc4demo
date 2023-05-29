@@ -317,7 +317,8 @@ class RunModel(QWidget):
         # logging.debug(f'===========  cancel_model_cb():  ============')
         if self.p:  # process running.
             self.p.kill()
-            # self.p.terminate()
+            self.p.terminate()
+            self.p = None
             # self.run_button.setEnabled(True)
             self.enable_run(True)
 
