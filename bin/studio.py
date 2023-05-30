@@ -355,28 +355,28 @@ class PhysiCellXMLCreator(QWidget):
 
             self.run_tab = RunModel(self.nanohub_flag, self.tabWidget, self.celldef_tab, self.rules_flag, self.download_menu)
 
-            self.homedir = os.getcwd()
-            print("studio.py: self.homedir = ",self.homedir)
+            self.home_dir = os.getcwd()
+            print("studio.py: self.home_dir = ",self.home_dir)
             if self.nanohub_flag:
                 try:
-                    self.run_tab.homedir = self.homedir
+                    self.run_tab.home_dir = self.home_dir
                     # cachedir = os.environ['CACHEDIR']
                     toolpath = os.environ['TOOLPATH']
                     print("studio.py: toolpath= ",toolpath)
                     # full_path = os.path.join(toolpath, "data")
-                    self.homedir = os.path.join(toolpath, "data")
+                    self.home_dir = os.path.join(toolpath, "data")
                 except:
                     print("studio.py: exception doing os.environ('TOOLPATH')")
 
-            self.run_tab.homedir = self.homedir
+            # self.run_tab.home_dir = self.home_dir
 
             # self.run_tab.config_xml_name.setText(current_xml_file)
             # self.run_tab.exec_name.setText(exec_file)
             # self.run_tab.exec_name.setText(str(Path(exec_file)))
             if not self.nanohub_flag:
-                self.run_tab.exec_name.setText(os.path.join(self.homedir, exec_file))
+                self.run_tab.exec_name.setText(os.path.join(self.home_dir, exec_file))
             else:
-                # self.run_tab.exec_name.setText(os.path.join(self.homedir, "bin", exec_file))
+                # self.run_tab.exec_name.setText(os.path.join(self.home_dir, "bin", exec_file))
                 self.run_tab.exec_name.setText(os.path.join(exec_file))
 
             self.run_tab.config_xml_name.setText(self.current_xml_file)
@@ -1253,7 +1253,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
     def biorobots_nanohub_cb(self):
         print("\n\n\n================ copy/load sample ======================================")
-        os.chdir(self.homedir)
+        os.chdir(self.home_dir)
         name = "biorobots_flat"
         # sample_file = Path("data", name + ".xml")
         # sample_file = Path(self.absolute_data_dir, name + ".xml")
