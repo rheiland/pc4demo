@@ -444,6 +444,12 @@ class PhysiCellXMLCreator(QWidget):
                 self.run_tab.debug_tab = self.debug_tab
 
                 self.debug_tab.add_msg(" studio.py: self.home_dir is "+self.home_dir)
+                if self.nanohub_flag:
+                    try:
+                        toolpath = os.environ['TOOLPATH']
+                        self.debug_tab.add_msg(" studio.py: toopath is "+toolpath)
+                    except:
+                        print("studio.py: unable to get TOOLPATH")
 
             self.vis_tab.reset_model()
             
