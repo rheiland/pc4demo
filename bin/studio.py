@@ -168,7 +168,7 @@ class PhysiCellXMLCreator(QWidget):
 
         self.current_dir = os.getcwd()
         print("self.current_dir = ",self.current_dir)
-        self.debug_tab.add_msg("--- studio.py: self.current_dir = ",self.current_dir )
+        # self.debug_tab.add_msg("--- studio.py: self.current_dir = ",self.current_dir )
         logging.debug(f'self.current_dir = {self.current_dir}')
         self.studio_root_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
         if self.nanohub_flag:
@@ -185,7 +185,7 @@ class PhysiCellXMLCreator(QWidget):
         if self.current_dir == self.studio_root_dir:  # are we running from studio root dir?
             # self.config_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
             self.config_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'config'))
-            self.debug_tab.add_msg("--- studio.py: self.current_dir (#2)= ",self.current_dir )
+            # self.debug_tab.add_msg("--- studio.py: self.current_dir (#2)= ",self.current_dir )
         print(f'self.config_dir =  {self.config_dir}')
         logging.debug(f'self.config_dir = {self.config_dir}')
 
@@ -312,7 +312,7 @@ class PhysiCellXMLCreator(QWidget):
         self.tabWidget.currentChanged.connect(self.tab_change_cb)
 
         self.current_dir = os.getcwd()
-        self.debug_tab.add_msg("--- studio.py: self.current_dir (#3)= ",self.current_dir )
+        # self.debug_tab.add_msg("--- studio.py: self.current_dir (#3)= ",self.current_dir )
         # print("studio.py: self.current_dir = ",self.current_dir)
         logging.debug(f'studio.py: self.current_dir = {self.current_dir}')
 
