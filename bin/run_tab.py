@@ -40,6 +40,7 @@ class RunModel(QWidget):
         # self.nanohub = True
         # following set in pmb.py
         self.current_dir = ''   
+        self.home_dir = ''   
         self.config_file = None
 
         # these get set in pmb.py
@@ -180,6 +181,8 @@ class RunModel(QWidget):
                 # remove any previous data
                 # NOTE: this dir name needs to match the <folder>  in /data/<config_file.xml>
                 if self.nanohub_flag:
+                    os.chdir(self.home_dir)  # session root dir on nanoHUB (not /tmpdir)
+                    self.debug_tab.add_msg("run_tab: chdir to (home_dir) "+self.home_dir)
                     os.system('rm -rf tmpdir*')
                     time.sleep(2)
                     if os.path.isdir('tmpdir'):
@@ -198,7 +201,8 @@ class RunModel(QWidget):
                     # write the default config file to tmpdir
                     # new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
                     tdir = os.path.abspath('tmpdir')
-                    new_config_file = Path(tdir,"config.xml")
+                    # new_config_file = Path(tdir,"config.xml")
+                    new_config_file = "tmpdir/config.xml"
                     self.output_dir = '.'
                     self.config_xml_name.setText('config.xml')
                 else:
@@ -320,10 +324,11 @@ class RunModel(QWidget):
         self.debug_tab.add_msg("run_tab: cancel_model_cb() -------")
         if self.p:  # process running.
             self.debug_tab.add_msg("   cancel_model_cb(): self.p is not None. Try to kill it.")
-            self.p.kill()
-            time.sleep(2)
-            # self.p.terminate()
-            # self.p = None
+            # self.p.kill()
+            # time.sleep(2)
+            self.p.terminate()
+            self.p = None
+            time.sleep(1)
             # self.run_button.setEnabled(True)
             self.enable_run(True)
         else:
