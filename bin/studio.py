@@ -364,7 +364,7 @@ class PhysiCellXMLCreator(QWidget):
                     toolpath = os.environ['TOOLPATH']
                     print("studio.py: toolpath= ",toolpath)
                     # full_path = os.path.join(toolpath, "data")
-                    self.home_dir = os.path.join(toolpath, "data")
+                    # self.home_dir = os.path.join(toolpath, "data")  # NO! rwh. But see use below.
                 except:
                     print("studio.py: exception doing os.environ('TOOLPATH')")
 
@@ -442,6 +442,8 @@ class PhysiCellXMLCreator(QWidget):
                 self.debug_tab = Debug()
                 self.tabWidget.addTab(self.debug_tab,"Debug")
                 self.run_tab.debug_tab = self.debug_tab
+
+                self.debug_tab.add_msg(" studio.py: self.home_dir is "+self.home_dir)
 
             self.vis_tab.reset_model()
             
