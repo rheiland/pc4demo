@@ -242,8 +242,8 @@ class RunModel(QWidget):
 
                     # save current table of rules in /tmpdir (where we are now)
                     self.debug_tab.add_msg("run_tab: setting rules dir: "+tdir)
-                    # self.rules_tab.rules_folder.setText(".")  # rwh: will nanoHUB not like this? 
-                    self.rules_tab.rules_folder.setText(tdir)  # rwh: will nanoHUB like this? 
+                    self.rules_tab.rules_folder.setText(".")  # rwh: will nanoHUB not like this? 
+                    # self.rules_tab.rules_folder.setText(tdir)  # rwh: will nanoHUB like this? 
                     self.rules_tab.rules_file.setText("rules.csv")
                     self.rules_tab.save_rules_cb()  
 
