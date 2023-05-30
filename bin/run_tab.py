@@ -200,9 +200,10 @@ class RunModel(QWidget):
 
                     # write the default config file to tmpdir
                     # new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
-                    tdir = os.path.abspath('tmpdir')
+                    # tdir = os.path.abspath('tmpdir')
                     # new_config_file = Path(tdir,"config.xml")
-                    new_config_file = "tmpdir/config.xml"
+                    # new_config_file = "tmpdir/config.xml"
+                    new_config_file = "config.xml"
                     self.output_dir = '.'
                     self.config_xml_name.setText('config.xml')
                 else:
