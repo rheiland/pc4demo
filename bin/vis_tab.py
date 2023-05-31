@@ -67,6 +67,8 @@ class Vis(VisBase, QWidget):
         # super().__init__(nanohub_flag, run_tab, model3D_flag)
         # global self.config_params
 
+        self.debug_tab = None  # set in studio.py
+
         self.figure = None
 
         # self.vis2D = True
@@ -185,7 +187,8 @@ class Vis(VisBase, QWidget):
         #     self.output_dir = "tmpdir"
 
         # stop the insanity!
-        self.output_dir = "."   # for nanoHUB  (overwritten in studio.py, based on config_tab)
+        # rwh: comment out 5-31-23; should inherit from vis_base.py
+        # self.output_dir = "."   # for nanoHUB  (overwritten in studio.py, based on config_tab)
         # self.output_dir = "tmpdir"   # for nanoHUB
 
         #-------------------------------------------
@@ -400,6 +403,12 @@ class Vis(VisBase, QWidget):
         # self.current_frame = frame
         fname = "snapshot%08d.svg" % frame
         full_fname = os.path.join(self.output_dir, fname)
+
+        if self.debug_tab and frame == 1:
+            self.debug_tab.add_msg("--- plot_svg(): output_dir= "+self.output_dir)
+            cwd = os.getcwd()
+            self.debug_tab.add_msg("                cwd= " + cwd)
+            self.debug_tab.add_msg("                full_fname= " + full_fname)
         # print("-- plot_svg(): full_fname= ",full_fname)
         # try:
         #     print("   ==>>>>> plot_svg(): full_fname=",full_fname)

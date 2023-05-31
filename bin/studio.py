@@ -442,6 +442,7 @@ class PhysiCellXMLCreator(QWidget):
                 self.debug_tab = Debug()
                 self.tabWidget.addTab(self.debug_tab,"Debug")
                 self.run_tab.debug_tab = self.debug_tab
+                self.vis_tab.debug_tab = self.debug_tab
 
                 self.debug_tab.add_msg(" studio.py: self.home_dir is "+self.home_dir)
                 if self.nanohub_flag:
