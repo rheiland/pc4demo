@@ -1082,6 +1082,14 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.studio_flag:
             self.run_tab.exec_name.setText('project')
         if self.nanohub_flag:
+            # os.chdir(self.home_dir)
+            tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
+            # rules_file0 = Path(self.absolute_data_dir, "cell_rules.csv")
+            rules_file0 = os.path.join(tool_dir,'data',"cell_rules.csv")
+            rules_file1 = os.path.join(self.home_dir,'data',"cell_rules.csv")
+            self.debug_tab.add_msg("studio.py: tumor_immune_cb(): copy "+rules_file0+" to "+rules_file1)
+            # rules_file1 = Path(self.home_dir, "cell_rules.csv")
+            shutil.copy(rules_file0, rules_file1)
             # self.config_tab.csv_folder.setText(self.absolute_data_dir)
             self.config_tab.csv_folder.setText(self.absolute_data_dir)
 
