@@ -177,7 +177,7 @@ class RunModel(QWidget):
                 # make sure we are where we started (app's root dir)
                 # logging.debug(f'\n------>>>> doing os.chdir to {self.current_dir}')
                 os.chdir(self.current_dir)  # session root dir on nanoHUB (not /tmpdir)
-                self.debug_tab.add_msg("run_tab: chdir to "+self.current_dir)
+                self.debug_tab.add_msg("run_tab: chdir to (current_dir) "+self.current_dir)
                 # remove any previous data
                 # NOTE: this dir name needs to match the <folder>  in /data/<config_file.xml>
                 if self.nanohub_flag:
@@ -300,7 +300,9 @@ class RunModel(QWidget):
                 if self.nanohub_flag:
                     self.p.start("submit",["--local",exec_str,xml_str])
                     self.debug_tab.add_msg("run_tab: submit --local "+exec_str + " "+xml_str)
-                    self.debug_tab.add_msg("self.p = "+str(self.p))
+                    cwd = os.getcwd()
+                    self.debug_tab.add_msg("                cwd= " + cwd)
+                    # self.debug_tab.add_msg("self.p = "+str(self.p))
                 else:
                     # logging.debug(f'\nrun_tab.py: running: {exec_str}, {xml_str}')
                     self.p.start(exec_str, [xml_str])
