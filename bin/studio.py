@@ -1173,7 +1173,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             try:
                 if self.p is None:  # No process running.
                     self.debug_tab.add_msg("   self.p is None; create QProcess()")
-                    cwd = os.getcwd())
+                    cwd = os.getcwd()
                     self.debug_tab.add_msg("  cwd= " + cwd)
                     # self.debug_tab.add_msg("  chdir= " + os.getcwd())
                     file_str = os.path.join(cwd, 'config.xml')
