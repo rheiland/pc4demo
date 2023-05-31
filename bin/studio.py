@@ -968,7 +968,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         os.chdir(self.current_dir)  # just in case we were in /tmpdir (and it crashed/failed, leaving us there)
 
         self.current_xml_file = os.path.join(self.studio_config_dir, name + ".xml")
-        self.debug_tab.add_msg("    load_model(): current_xml_file= ",self.current_xml_file)
+        self.debug_tab.add_msg("    load_model(): current_xml_file= "+self.current_xml_file)
         # logging.debug(f'studio.py: load_model(): self.current_xml_file= {self.current_xml_file}')
         print(f'studio.py: load_model(): self.current_xml_file= {self.current_xml_file}')
 
