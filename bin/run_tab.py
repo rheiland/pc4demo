@@ -328,12 +328,16 @@ class RunModel(QWidget):
         self.debug_tab.add_msg("run_tab: cancel_model_cb() -------")
         if self.p:  # process running.
             self.debug_tab.add_msg("   cancel_model_cb(): self.p is not None. Try to kill it.")
-            # self.p.kill()
-            # time.sleep(2)
-            self.p.terminate()
-            self.p = None
-            time.sleep(1)
-            # self.run_button.setEnabled(True)
+            try:
+                # self.p.kill()
+                # time.sleep(2)
+                self.p.terminate()
+                self.p = None
+                time.sleep(1)
+                # self.run_button.setEnabled(True)
+            except:
+                self.debug_tab.add_msg("   cancel_model_cb(): exception trying to terminate")
+
             self.enable_run(True)
         else:
             self.debug_tab.add_msg("   cancel_model_cb(): self.p is None")
