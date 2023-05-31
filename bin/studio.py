@@ -447,7 +447,7 @@ class PhysiCellXMLCreator(QWidget):
                 if self.nanohub_flag:
                     try:
                         toolpath = os.environ['TOOLPATH']
-                        self.debug_tab.add_msg(" studio.py: toopath is "+toolpath)
+                        self.debug_tab.add_msg(" studio.py: TOOLPATH is "+toolpath)
                     except:
                         print("studio.py: unable to get TOOLPATH")
 
@@ -952,6 +952,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
 
     def load_model(self,name):
+        self.debug_tab.add_msg("studio.py:  load_model() ------------")
         if self.studio_flag:
             self.run_tab.cancel_model_cb()  # if a sim is already running, cancel it
             self.vis_tab.physiboss_vis_checkbox = None    # default: assume a non-boolean intracellular model
@@ -960,13 +961,15 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                 self.vis_tab.physiboss_vis_checkbox.setChecked(False)
 
 
+        self.debug_tab.add_msg("    load_model(): chdir to ",self.current_dir)
         os.chdir(self.current_dir)  # just in case we were in /tmpdir (and it crashed/failed, leaving us there)
 
         self.current_xml_file = os.path.join(self.studio_config_dir, name + ".xml")
-        logging.debug(f'studio.py: load_model(): self.current_xml_file= {self.current_xml_file}')
+        self.debug_tab.add_msg("    load_model(): current_xml_file= ",self.current_xml_file)
+        # logging.debug(f'studio.py: load_model(): self.current_xml_file= {self.current_xml_file}')
         print(f'studio.py: load_model(): self.current_xml_file= {self.current_xml_file}')
 
-        logging.debug(f'studio.py: load_model(): {self.xml_root.find(".//cell_definitions//cell_rules")}')
+        # logging.debug(f'studio.py: load_model(): {self.xml_root.find(".//cell_definitions//cell_rules")}')
         print(f'studio.py: load_model(): {self.xml_root.find(".//cell_definitions//cell_rules")}')
 
         # if self.xml_root.find(".//cell_definitions//cell_rules"):
@@ -1170,18 +1173,27 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             try:
                 if self.p is None:  # No process running.
                     self.debug_tab.add_msg("   self.p is None; create QProcess()")
-                    self.debug_tab.add_msg("  cwd= " + os.getcwd())
-                    self.debug_tab.add_msg("doing: exportfile config.xml")
+                    cwd = os.getcwd())
+                    self.debug_tab.add_msg("  cwd= " + cwd)
+                    # self.debug_tab.add_msg("  chdir= " + os.getcwd())
+                    file_str = os.path.join(cwd, 'config.xml')
+                    config_file = Path(file_str)
+                    if config_file.is_file():
+                        self.debug_tab.add_msg("   file exists: "+file_str)
+                    else:
+                        self.debug_tab.add_msg("   file does NOT exist: "+file_str)
                     self.p = QProcess()
                     self.p.readyReadStandardOutput.connect(self.handle_stdout)
                     self.p.readyReadStandardError.connect(self.handle_stderr)
                     self.p.stateChanged.connect(self.handle_state)
                     self.p.finished.connect(self.process_finished)  # Clean up once complete.
+                    self.debug_tab.add_msg("     attempting exportfile config.xml")
                     self.p.start("exportfile config.xml")
                 else:
                     self.debug_tab.add_msg("   self.p is NOT None; just return!")
             except:
                 self.message("Unable to download config.xml")
+                self.debug_tab.add_msg("     exception doing exportfile config.xml")
                 print("Unable to download config.xml")
                 self.p = None
         return
