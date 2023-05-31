@@ -235,6 +235,7 @@ class RunModel(QWidget):
                     # self.debug_tab.add_msg("run_tab: writing config to "+str(new_config_file))
                     # Operate from tmpdir. XML: <folder>,</folder>; temporary output goes here.  May be copied to cache later.
                     tdir = os.path.abspath('tmpdir')
+                    self.debug_tab.add_msg("run_tab: chdir to (tdir) "+tdir)
                     os.chdir(tdir)   # run exec from here on nanoHUB
 
                     self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
