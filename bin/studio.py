@@ -135,16 +135,22 @@ class PhysiCellXMLCreator(QWidget):
             if "home/nanohub" in os.environ['HOME']:
                 self.nanohub_flag = True
 
+        self.current_dir = os.getcwd()
+        print("studio.py: self.current_dir = ",self.current_dir)
+        # self.debug_tab.add_msg("--- studio.py: self.current_dir = ",self.current_dir )
+        # logging.debug(f'self.current_dir = {self.current_dir}')
+
         if self.nanohub_flag:
             # binDirectory = os.path.dirname(os.path.abspath(__file__))
             # dataDirectory = os.path.join(binDirectory,'..','data')
 
             # dataDirectory = os.path.join(binDirectory,'..','data')
             # tool_dir = os.getenv('TOOLPATH')
-            tool_dir = os.environ['TOOLPATH']
-            dataDirectory = os.path.join(tool_dir,'data')
+            # tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
+            # dataDirectory = os.path.join(tool_dir,'data')
+            dataDirectory = os.path.join(self.current_dir,'data')
             self.absolute_data_dir = os.path.abspath(dataDirectory)  # not needed?
-            print("-------- absolute_data_dir =",self.absolute_data_dir)
+            print("studio.py: -------- absolute_data_dir =",self.absolute_data_dir)
 
             # NOTE: if your C++ needs to also have an absolute path to data dir, do so via an env var
             # os.environ['KIDNEY_DATA_PATH'] = self.absolute_data_dir
@@ -166,10 +172,6 @@ class PhysiCellXMLCreator(QWidget):
         self.resize(1100, 770)  # width, height (height >= Cell Types|Death params)
         self.setMinimumSize(1100, 770)  #width, height of window
 
-        self.current_dir = os.getcwd()
-        print("self.current_dir = ",self.current_dir)
-        # self.debug_tab.add_msg("--- studio.py: self.current_dir = ",self.current_dir )
-        logging.debug(f'self.current_dir = {self.current_dir}')
         self.studio_root_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
         if self.nanohub_flag:
             # self.studio_data_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
