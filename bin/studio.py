@@ -964,7 +964,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                 self.vis_tab.physiboss_vis_checkbox.setChecked(False)
 
 
-        self.debug_tab.add_msg("    load_model(): chdir to ",self.current_dir)
+        self.debug_tab.add_msg("    load_model(): chdir to "+self.current_dir)
         os.chdir(self.current_dir)  # just in case we were in /tmpdir (and it crashed/failed, leaving us there)
 
         self.current_xml_file = os.path.join(self.studio_config_dir, name + ".xml")
