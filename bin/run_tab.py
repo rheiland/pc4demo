@@ -56,6 +56,8 @@ class RunModel(QWidget):
         self.tree = None
 
         self.output_dir = 'output'
+        if self.nanohub_flag:
+            self.output_dir = 'tmpdir'
 
         #-----
         self.sim_output = QWidget()
@@ -204,7 +206,8 @@ class RunModel(QWidget):
                     # new_config_file = Path(tdir,"config.xml")
                     # new_config_file = "tmpdir/config.xml"
                     new_config_file = "config.xml"
-                    self.output_dir = '.'
+                    # self.output_dir = '.'
+                    self.output_dir = 'tmpdir'
                     self.config_xml_name.setText('config.xml')
                 else:
                     self.output_dir = self.config_tab.folder.text()
@@ -242,7 +245,7 @@ class RunModel(QWidget):
                     # rwh: 6-1-23: No, don't run from tmpdir, but session root!
                     # os.chdir(tdir)   # run exec from here on nanoHUB
 
-                    self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
+                    self.tree.write(new_config_file)  # saves modified XML to config.xml (NOT tmpdir/config.xml)
                     self.debug_tab.add_msg("run_tab: writing config to "+str(new_config_file))
 
                     # save current table of rules in /tmpdir (where we are now)
