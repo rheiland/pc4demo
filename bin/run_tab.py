@@ -234,18 +234,22 @@ class RunModel(QWidget):
                     # self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
                     # self.debug_tab.add_msg("run_tab: writing config to "+str(new_config_file))
                     # Operate from tmpdir. XML: <folder>,</folder>; temporary output goes here.  May be copied to cache later.
-                    tdir = os.path.abspath('tmpdir')
-                    self.debug_tab.add_msg("run_tab: chdir to (tdir) "+tdir)
-                    os.chdir(tdir)   # run exec from here on nanoHUB
+
+
+                    # tdir = os.path.abspath('tmpdir')
+                    # self.debug_tab.add_msg("run_tab: chdir to (tdir) "+tdir)
+
+                    # rwh: 6-1-23: No, don't run from tmpdir, but session root!
+                    # os.chdir(tdir)   # run exec from here on nanoHUB
 
                     self.tree.write(new_config_file)  # saves modified XML to tmpdir/config.xml 
                     self.debug_tab.add_msg("run_tab: writing config to "+str(new_config_file))
 
                     # save current table of rules in /tmpdir (where we are now)
-                    self.debug_tab.add_msg("run_tab: setting rules dir: "+tdir)
-                    self.rules_tab.rules_folder.setText(".")  # rwh: will nanoHUB not like this? 
+                    # self.debug_tab.add_msg("run_tab: setting rules dir: "+tdir)
+                    # self.rules_tab.rules_folder.setText(".")  # rwh: will nanoHUB not like this? 
                     # self.rules_tab.rules_folder.setText(tdir)  # rwh: will nanoHUB like this? 
-                    self.rules_tab.rules_file.setText("rules.csv")
+                    # self.rules_tab.rules_file.setText("rules.csv")
                     self.rules_tab.save_rules_cb()  
 
                 else:
