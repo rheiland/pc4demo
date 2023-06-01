@@ -1809,7 +1809,8 @@ class Rules(QWidget):
             # folder_name = self.xml_root.find(".//cell_definitions//cell_rules//folder").text
             folder_name = uep.find(".//folder").text
             print(f'rules_tab.py: fill_gui():  folder_name =  {folder_name}')
-            self.debug_tab.add_msg("       rules_tab.py:fill_gui() folder_name= "+folder_name)
+            if folder_name is not None:
+                self.debug_tab.add_msg("       rules_tab.py:fill_gui() folder_name= "+folder_name)
             self.rules_folder.setText(folder_name)
             # file_name = self.xml_root.find(".//cell_definitions//cell_rules//filename").text
             file_name = uep.find(".//filename").text
