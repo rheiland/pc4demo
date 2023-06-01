@@ -148,6 +148,8 @@ class Rules(QWidget):
 
         self.rules_plot = None
 
+        self.debug_tab = None
+
         self.nanohub_flag = nanohub_flag
         self.homedir = '.'  # reset in studio.py
         self.absolute_data_dir = None   # updated in studio.py
@@ -1765,6 +1767,7 @@ class Rules(QWidget):
     def fill_gui(self):
         # logging.debug(f'\n\n------------\nrules_tab.py: fill_gui():')
         print(f'\n\n------------\nrules_tab.py: fill_gui():')
+        self.debug_tab.add_msg("\n--- rules_tab.py: fill_gui() -------------")
 
         self.clear_comboboxes()
 
@@ -1806,6 +1809,7 @@ class Rules(QWidget):
             # folder_name = self.xml_root.find(".//cell_definitions//cell_rules//folder").text
             folder_name = uep.find(".//folder").text
             print(f'rules_tab.py: fill_gui():  folder_name =  {folder_name}')
+            self.debug_tab.add_msg("       rules_tab.py:fill_gui() folder_name= "+folder_name)
             self.rules_folder.setText(folder_name)
             # file_name = self.xml_root.find(".//cell_definitions//cell_rules//filename").text
             file_name = uep.find(".//filename").text
@@ -1843,7 +1847,9 @@ class Rules(QWidget):
             #     self.fill_rules(full_rules_fname)
 
             if self.nanohub_flag:  # sigh
-                full_rules_fname = os.path.join(self.absolute_data_dir, file_name)
+                # full_rules_fname = os.path.join(self.absolute_data_dir, file_name)
+                full_rules_fname = os.path.join('.', file_name)
+                self.debug_tab.add_msg("       rules_tab.py:fill_gui() calling fill_rules with = "+full_rules_fname)
                 self.fill_rules(full_rules_fname)
             else:
                 self.fill_rules(full_rules_fname)

@@ -449,6 +449,7 @@ class PhysiCellXMLCreator(QWidget):
                 self.tabWidget.addTab(self.debug_tab,"Debug")
                 self.run_tab.debug_tab = self.debug_tab
                 self.vis_tab.debug_tab = self.debug_tab
+                self.rules_tab.debug_tab = self.debug_tab
 
                 self.debug_tab.add_msg("--- studio.py: self.current_dir = "+self.current_dir )
                 # ~l.330
