@@ -234,10 +234,12 @@ class PhysiCellXMLCreator(QWidget):
         if self.nanohub_flag:  # rwh - test if works on nanoHUB
             print("studio.py: ---- TRUE nanohub_flag: updating config_tab folder")
             # self.config_tab.folder.setText('tmpdir')
-            self.config_tab.folder.setText('.')
+            # self.config_tab.folder.setText('.')
+            # self.config_tab.folder.setText('tmpdir')
+            self.config_tab.folder.setText('output')
             # self.config_tab.folder.setEnabled(False)
             # self.config_tab.csv_folder.setText('')
-            self.config_tab.csv_folder.setEnabled(False)
+            # self.config_tab.csv_folder.setEnabled(False)
         else:
             print("studio.py: ---- FALSE nanohub_flag: NOT updating config_tab folder")
 
@@ -342,12 +344,12 @@ class PhysiCellXMLCreator(QWidget):
                 print("studio.py: ---- TRUE nanohub_flag: updating ics_tab folder")
                 # self.ics_tab.csv_folder.setText('')
                 self.config_tab.csv_folder.setText(self.absolute_data_dir)
-                self.config_tab.csv_folder.setEnabled(False)
+                # self.config_tab.csv_folder.setEnabled(False)
                 self.config_tab.csv_file.setText("mycells.csv")
 
                 self.ics_tab.csv_folder.setText(self.absolute_data_dir)
                 self.ics_tab.output_file.setText("mycells.csv")
-                self.ics_tab.csv_folder.setEnabled(False)
+                # self.ics_tab.csv_folder.setEnabled(False)
             else:
                 print("studio.py: ---- FALSE nanohub_flag: NOT updating ics_tab folder")
 
@@ -407,7 +409,7 @@ class PhysiCellXMLCreator(QWidget):
                 # self.vis_tab.output_folder.setText('tmpdir')
                 self.vis_tab.output_folder.setText('.')
                 # self.vis_tab.output_folder.setEnabled(False)
-                self.vis_tab.output_folder_button.setEnabled(False)
+                # self.vis_tab.output_folder_button.setEnabled(False)
 
             self.vis_tab.config_tab = self.config_tab
             # self.vis_tab.output_dir = self.config_tab.plot_folder.text()
