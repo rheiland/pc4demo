@@ -967,6 +967,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         self.debug_tab.add_msg("    load_model(): chdir to "+self.current_dir)
         os.chdir(self.current_dir)  # just in case we were in /tmpdir (and it crashed/failed, leaving us there)
 
+        # self.studio_config_dir = the tool dir (/apps/pc4demo/r63/data)
         self.current_xml_file = os.path.join(self.studio_config_dir, name + ".xml")
         self.debug_tab.add_msg("    load_model(): current_xml_file= "+self.current_xml_file)
         # logging.debug(f'studio.py: load_model(): self.current_xml_file= {self.current_xml_file}')
@@ -1078,21 +1079,40 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.run_tab.exec_name.setText('biorobots')
 
     def tumor_immune_cb(self):
+        self.debug_tab.add_msg("\nstudio.py: tumor_immune_cb()-------------- call load_model")
         self.load_model("tumor_immune")
+
         if self.studio_flag:
             self.run_tab.exec_name.setText('project')
         if self.nanohub_flag:
             # os.chdir(self.home_dir)
             tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
             # rules_file0 = Path(self.absolute_data_dir, "cell_rules.csv")
+            self.debug_tab.add_msg("tumor_immune_cb(): tool_dir=TOOLPATH= "+tool_dir)
             rules_file0 = os.path.join(tool_dir,'data',"cell_rules.csv")
+            self.debug_tab.add_msg("tumor_immune_cb(): rules_file0= "+rules_file0)
             # rules_file1 = os.path.join(self.home_dir,'data',"cell_rules.csv")
+            self.debug_tab.add_msg("tumor_immune_cb(): self.home_dir= "+self.home_dir)
             rules_file1 = os.path.join(self.home_dir,"cell_rules.csv")
-            self.debug_tab.add_msg("studio.py: tumor_immune_cb(): copy "+rules_file0+" to "+rules_file1)
+            self.debug_tab.add_msg("tumor_immune_cb(): rules_file1= "+rules_file1)
+            self.debug_tab.add_msg("tumor_immune_cb(): copy "+rules_file0+" to "+rules_file1)
             # rules_file1 = Path(self.home_dir, "cell_rules.csv")
             shutil.copy(rules_file0, rules_file1)
-            self.config_tab.csv_folder.setText(self.absolute_data_dir)
-            # self.config_tab.csv_folder.setText(self.home_dir)
+            self.debug_tab.add_msg("tumor_immune_cb(): back from rules shutil.copy")
+
+
+            file0 = os.path.join(tool_dir,'data',"cells.csv")
+            self.debug_tab.add_msg("tumor_immune_cb(): = "+file0)
+            # rules_file1 = os.path.join(self.home_dir,'data',"cell_rules.csv")
+            self.debug_tab.add_msg("tumor_immune_cb(): self.home_dir= "+self.home_dir)
+            file1 = os.path.join(self.home_dir,"cells.csv")
+            self.debug_tab.add_msg("tumor_immune_cb(): file1= "+file1)
+            self.debug_tab.add_msg("tumor_immune_cb(): copy "+file0+" to "+file1)
+            shutil.copy(file0, file1)
+
+            # self.config_tab.csv_folder.setText(self.absolute_data_dir)
+            self.config_tab.csv_folder.setText(self.home_dir)
+            self.config_tab.csv_file.setText("cells.csv")
             if self.rules_flag:
                 self.rules_tab.rules_folder.setText(self.home_dir)
                 self.rules_tab.rules_file.setText("cell_rules.csv")
