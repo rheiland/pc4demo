@@ -448,6 +448,11 @@ class PhysiCellXMLCreator(QWidget):
                 self.run_tab.debug_tab = self.debug_tab
                 self.vis_tab.debug_tab = self.debug_tab
 
+                # ~l.330
+                self.debug_tab.add_msg(" studio.py: self.absolute_data_dir is "+self.absolute_data_dir)
+                self.debug_tab.add_msg(" studio.py: self.rules_tab.rules_folder.text() is "+self.rules_tab.rules_folder.text())
+                self.rules_tab.rules_folder.setText(self.absolute_data_dir)
+
                 self.debug_tab.add_msg(" studio.py: self.home_dir is "+self.home_dir)
                 if self.nanohub_flag:
                     try:
