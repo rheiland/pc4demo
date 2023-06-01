@@ -222,6 +222,9 @@ class PhysiCellXMLCreator(QWidget):
         self.num_models = 0
         self.model = {}  # key: name, value:[read-only, tree]
 
+        if self.debug_flag:
+            self.debug_tab = Debug()
+
         self.config_tab = Config(self.studio_flag)
         self.config_tab_index = 0
         self.config_tab.xml_root = self.xml_root
@@ -445,7 +448,7 @@ class PhysiCellXMLCreator(QWidget):
             #     self.legend_tab.reload_legend()
 
             if self.debug_flag:
-                self.debug_tab = Debug()
+                # self.debug_tab = Debug()
                 self.tabWidget.addTab(self.debug_tab,"Debug")
                 self.run_tab.debug_tab = self.debug_tab
                 self.vis_tab.debug_tab = self.debug_tab
