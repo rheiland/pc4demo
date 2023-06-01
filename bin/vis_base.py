@@ -485,7 +485,8 @@ class VisBase():
 
         # stop the insanity!
         self.output_dir = "."   # for nanoHUB  (overwritten in studio.py, based on config_tab)
-        # self.output_dir = "tmpdir"   # for nanoHUB
+        if self.nanohub_flag:
+            self.output_dir = "tmpdir"   # for nanoHUB
 
         #-------------------------------------------
         label_width = 110
