@@ -589,7 +589,8 @@ class Rules(QWidget):
 
         self.import_rules_button = QPushButton("Import")
         if self.nanohub_flag:
-            self.import_rules_button.setEnabled(False)
+            # self.import_rules_button.setEnabled(False)
+            self.import_rules_button.setEnabled(True)
         self.import_rules_button.setFixedWidth(100)
         self.import_rules_button.setStyleSheet("background-color: lightgreen")
         self.import_rules_button.clicked.connect(self.import_rules_cb)
@@ -604,7 +605,8 @@ class Rules(QWidget):
 
         self.save_button = QPushButton("Save")
         if self.nanohub_flag:
-            self.save_button.setEnabled(False)
+            # self.save_button.setEnabled(False)
+            self.save_button.setEnabled(True)
         self.save_button.setFixedWidth(100)
         # self.save_button.setStyleSheet("background-color: lightgreen")
         self.save_button.setStyleSheet("background-color: yellow")
@@ -634,7 +636,8 @@ class Rules(QWidget):
         hbox2.addWidget(label) 
         self.rules_file = QLineEdit()
         if self.nanohub_flag:
-            self.rules_file.setEnabled(False)
+            # self.rules_file.setEnabled(False)
+            self.rules_file.setEnabled(True)
         self.rules_file.setFixedWidth(200)
         hbox2.addWidget(self.rules_file) 
         hlayout.addLayout(hbox2) 
