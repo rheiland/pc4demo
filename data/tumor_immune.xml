@@ -27,7 +27,7 @@
     </parallel>
 
     <save>
-        <folder>.</folder>
+        <folder>tmpdir</folder>
         <full_data>
             <interval units="min">60</interval>
             <enable>true</enable>
@@ -1174,7 +1174,7 @@
 
     <initial_conditions>
         <cell_positions type="csv" enabled="true">
-            <folder>../data</folder>
+            <folder>.</folder>
             <filename>cells.csv</filename>
         </cell_positions>
     </initial_conditions>
@@ -1182,7 +1182,7 @@
     <cell_rules>
         <rulesets>
             <ruleset protocol="CBHG" version="2.0" format="csv" enabled="true">
-                <folder>../data</folder>
+                <folder>.</folder>
                 <filename>cell_rules.csv</filename>
             </ruleset>
         </rulesets>
