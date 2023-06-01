@@ -1080,7 +1080,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
     def tumor_immune_cb(self):
         self.debug_tab.add_msg("\nstudio.py: tumor_immune_cb()-------------- call load_model")
-        self.load_model("tumor_immune")
+        # self.load_model("tumor_immune")
 
         if self.studio_flag:
             self.run_tab.exec_name.setText('project')
@@ -1116,6 +1116,8 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             if self.rules_flag:
                 self.rules_tab.rules_folder.setText(self.home_dir)
                 self.rules_tab.rules_file.setText("cell_rules.csv")
+
+        self.load_model("tumor_immune")
 
     def cancer_biorobots_cb(self):
         self.load_model("cancer_biorobots")
