@@ -343,24 +343,34 @@ class RunModel(QWidget):
             self.debug_tab.add_msg("   cancel_model_cb(): self.p is None")
 
     def handle_stderr(self):
-        data = self.p.readAllStandardError()
-        stderr = bytes(data).decode("utf8")
-        self.message(stderr)
+        try:
+            data = self.p.readAllStandardError()
+            stderr = bytes(data).decode("utf8")
+            self.message(stderr)
+        except:
+            self.debug_tab.add_msg("handle_stderr(): exception")
 
     def handle_stdout(self):
-        data = self.p.readAllStandardOutput()
-        stdout = bytes(data).decode("utf8")
-        self.message(stdout)
+        try:
+            data = self.p.readAllStandardOutput()
+            stdout = bytes(data).decode("utf8")
+            self.message(stdout)
+        except:
+            self.debug_tab.add_msg("handle_stdout(): exception")
+
 
     def handle_state(self, state):
-        states = {
-            QProcess.NotRunning: 'Not running',
-            QProcess.Starting: 'Starting',
-            QProcess.Running: 'Running',
-        }
-        state_name = states[state]
-        self.message(f"State changed: {state_name}")
+        try:
+            states = {
+                QProcess.NotRunning: 'Not running',
+                QProcess.Starting: 'Starting',
+                QProcess.Running: 'Running',
+            }
+            state_name = states[state]
+            self.message(f"State changed: {state_name}")
         # self.message(f"Starting in a few secs...")   # only for "Starting"
+        except:
+            self.debug_tab.add_msg("handle_state(): exception")
 
     def process_finished(self):
         self.message("Process finished.")
