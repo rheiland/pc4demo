@@ -686,6 +686,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.download_rules_item = self.download_menu.addAction("Download rules.csv", self.download_rules_cb)
             self.download_svg_item = self.download_menu.addAction("Download SVG", self.download_svg_cb)
             self.download_mat_item = self.download_menu.addAction("Download binary (.mat) data", self.download_full_cb)
+            self.download_graph_item = self.download_menu.addAction("Download cell graph (.txt) data", self.download_graph_cb)
             # self.download_menu_item.setEnabled(False)
             # self.download_menu.setEnabled(False)
         else:
@@ -1259,76 +1260,125 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
     def download_rules_cb(self):
         if self.nanohub_flag:
             try:
-                if self.p is None:  # No process running.
-                    self.p = QProcess()
-                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
-                    self.p.readyReadStandardError.connect(self.handle_stderr)
-                    self.p.stateChanged.connect(self.handle_state)
-                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
-
-                    self.p.start("exportfile rules.csv")
-                else:
-                    self.debug_tab.add_msg(" download_rules_cb():  self.p is NOT None; just return!")
+                self.debug_tab.add_msg("   trying to use os.system(exportfile rules.csv)")
+                os.system("exportfile rules.csv")
             except:
-                self.message("Unable to download rules.csv")
-                print("Unable to download rules.csv")
-                self.p = None
+                self.debug_tab.add_msg("   exception on: os.system(exportfile rules.csv")
+
+            # try:
+            #     if self.p is None:  # No process running.
+            #         self.p = QProcess()
+            #         self.p.readyReadStandardOutput.connect(self.handle_stdout)
+            #         self.p.readyReadStandardError.connect(self.handle_stderr)
+            #         self.p.stateChanged.connect(self.handle_state)
+            #         self.p.finished.connect(self.process_finished)  # Clean up once complete.
+
+            #         self.p.start("exportfile rules.csv")
+            #     else:
+            #         self.debug_tab.add_msg(" download_rules_cb():  self.p is NOT None; just return!")
+            # except:
+            #     self.message("Unable to download rules.csv")
+            #     print("Unable to download rules.csv")
+            #     self.p = None
         return
 
     def download_svg_cb(self):
         if self.nanohub_flag:
             try:
-                if self.p is None:  # No process running.
-                    self.p = QProcess()
-                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
-                    self.p.readyReadStandardError.connect(self.handle_stderr)
-                    self.p.stateChanged.connect(self.handle_state)
-                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
-
+                self.debug_tab.add_msg("   trying to use os.system(exportfile svg.zip)")
                     # file_str = os.path.join(self.output_dir, '*.svg')
-                    file_str = "*.svg"
-                    print('-------- download_svg_cb(): zip up all ',file_str)
-                    with zipfile.ZipFile('svg.zip', 'w') as myzip:
-                        for f in glob.glob(file_str):
-                            myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-                    self.p.start("exportfile svg.zip")
-                else:
-                    self.debug_tab.add_msg(" download_svg_cb():  self.p is NOT None; just return!")
+                file_str = "*.svg"
+                print('-------- download_svg_cb(): zip up all ',file_str)
+                with zipfile.ZipFile('svg.zip', 'w') as myzip:
+                    for f in glob.glob(file_str):
+                        myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                os.system("exportfile svg.zip")
             except:
-                self.message("Unable to download svg.zip")
-                print("Unable to download svg.zip")
-                self.p = None
+                self.debug_tab.add_msg("   exception on: os.system(exportfile svg.zip")
+
+            # try:
+            #     if self.p is None:  # No process running.
+            #         self.p = QProcess()
+            #         self.p.readyReadStandardOutput.connect(self.handle_stdout)
+            #         self.p.readyReadStandardError.connect(self.handle_stderr)
+            #         self.p.stateChanged.connect(self.handle_state)
+            #         self.p.finished.connect(self.process_finished)  # Clean up once complete.
+
+            #         # file_str = os.path.join(self.output_dir, '*.svg')
+            #         file_str = "*.svg"
+            #         print('-------- download_svg_cb(): zip up all ',file_str)
+            #         with zipfile.ZipFile('svg.zip', 'w') as myzip:
+            #             for f in glob.glob(file_str):
+            #                 myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+            #         self.p.start("exportfile svg.zip")
+            #     else:
+            #         self.debug_tab.add_msg(" download_svg_cb():  self.p is NOT None; just return!")
+            # except:
+            #     self.message("Unable to download svg.zip")
+            #     print("Unable to download svg.zip")
+            #     self.p = None
         return
 
     def download_full_cb(self):
         if self.nanohub_flag:
             try:
-                if self.p is None:  # No process running.
-                    self.p = QProcess()
-                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
-                    self.p.readyReadStandardError.connect(self.handle_stderr)
-                    self.p.stateChanged.connect(self.handle_state)
-                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
-
-                    # file_xml = os.path.join(self.output_dir, '*.xml')
-                    # file_mat = os.path.join(self.output_dir, '*.mat')
-                    file_xml = '*.xml'
-                    file_mat = '*.mat'
-                    print('-------- download_full_cb(): zip up all .xml and .mat')
-                    with zipfile.ZipFile('mcds.zip', 'w') as myzip:
-                        for f in glob.glob(file_xml):
-                            myzip.write(f, os.path.basename(f)) # 2nd arg avoids full filename path in the archive
-                        for f in glob.glob(file_mat):
-                            myzip.write(f, os.path.basename(f))
-                    self.p.start("exportfile mcds.zip")
-                else:
-                    self.debug_tab.add_msg(" download_full_cb():  self.p is NOT None; just return!")
+                self.debug_tab.add_msg("   trying to use os.system(exportfile mcds.zip)")
+                    # file_str = os.path.join(self.output_dir, '*.svg')
+                file_xml = "*.xml"
+                file_mat = "*.mat"
+                print('-------- download_svg_cb(): zip up all ',file_str)
+                with zipfile.ZipFile('mcds.zip', 'w') as myzip:
+                    for f in glob.glob(file_xml):
+                        myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                    for f in glob.glob(file_mat):
+                        myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                os.system("exportfile mcds.zip")
             except:
-                self.message("Unable to download mcds.zip")
-                print("Unable to download mcds.zip")
-                self.p = None
+                self.debug_tab.add_msg("   exception on: os.system(exportfile mcds.zip")
+
+            # try:
+            #     if self.p is None:  # No process running.
+            #         self.p = QProcess()
+            #         self.p.readyReadStandardOutput.connect(self.handle_stdout)
+            #         self.p.readyReadStandardError.connect(self.handle_stderr)
+            #         self.p.stateChanged.connect(self.handle_state)
+            #         self.p.finished.connect(self.process_finished)  # Clean up once complete.
+
+            #         # file_xml = os.path.join(self.output_dir, '*.xml')
+            #         # file_mat = os.path.join(self.output_dir, '*.mat')
+            #         file_xml = '*.xml'
+            #         file_mat = '*.mat'
+            #         print('-------- download_full_cb(): zip up all .xml and .mat')
+            #         with zipfile.ZipFile('mcds.zip', 'w') as myzip:
+            #             for f in glob.glob(file_xml):
+            #                 myzip.write(f, os.path.basename(f)) # 2nd arg avoids full filename path in the archive
+            #             for f in glob.glob(file_mat):
+            #                 myzip.write(f, os.path.basename(f))
+            #         self.p.start("exportfile mcds.zip")
+            #     else:
+            #         self.debug_tab.add_msg(" download_full_cb():  self.p is NOT None; just return!")
+            # except:
+            #     self.message("Unable to download mcds.zip")
+            #     print("Unable to download mcds.zip")
+            #     self.p = None
         return
 
+    def download_graph_cb(self):
+        if self.nanohub_flag:
+            try:
+                self.debug_tab.add_msg("   trying to use os.system(exportfile graph.zip)")
+                    # file_str = os.path.join(self.output_dir, '*.svg')
+                file_str = "*.txt"
+                print('-------- download_graph): zip up all ',file_str)
+                with zipfile.ZipFile('graph.zip', 'w') as myzip:
+                    for f in glob.glob(file_str):
+                        myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                os.system("exportfile graph.zip")
+            except:
+                self.debug_tab.add_msg("   exception on: os.system(exportfile graph.zip")
+
+
+    #-------------------------------------------------
     def biorobots_nanohub_cb(self):
         print("\n\n\n================ copy/load sample ======================================")
         os.chdir(self.home_dir)
