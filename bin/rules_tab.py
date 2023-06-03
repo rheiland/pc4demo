@@ -377,8 +377,8 @@ class Rules(QWidget):
         # label.setAlignment(QtCore.Qt.AlignCenter)
         hlayout.addWidget(label) 
 
-        label = QLabel("Base")
-        lwidth = 30
+        label = QLabel("Base value")
+        lwidth = 72
         label.setFixedWidth(lwidth)
         # label.setAlignment(QtCore.Qt.AlignRight)
         label.setAlignment(QtCore.Qt.AlignCenter)
@@ -412,13 +412,14 @@ class Rules(QWidget):
 
         #---
         label = QLabel("")
-        lwidth = 60
+        lwidth = 95
         label.setFixedWidth(lwidth)
         hlayout.addWidget(label) 
 
         #---
-        label = QLabel("Max response")
-        label.setFixedWidth(90)
+        # label = QLabel("Max response")
+        label = QLabel("Saturation value")
+        label.setFixedWidth(100)
         # label.setAlignment(QtCore.Qt.AlignRight)
         label.setAlignment(QtCore.Qt.AlignCenter)
         hlayout.addWidget(label) 
@@ -719,7 +720,7 @@ class Rules(QWidget):
         # header.setSectionResizeMode(9, QHeaderView.ResizeToContents)
 
         # self.rules_table.setHorizontalHeaderLabels(['CellType','Response','Min','Base','Max', 'Signal','Direction','Half-max','Hill power','Apply to dead'])
-        self.rules_table.setHorizontalHeaderLabels(['CellType','Signal','Direction','Behavior','Max','Half-max','Hill power','Apply to dead'])
+        self.rules_table.setHorizontalHeaderLabels(['CellType','Signal','Direction','Behavior','Saturation value','Half-max','Hill power','Apply to dead'])
 
         # Don't like the behavior these offer, e.g., locks down width of 0th column :/
         # header = self.rules_table.horizontalHeader()       
