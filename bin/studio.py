@@ -1221,12 +1221,16 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
     def download_config_cb(self):
         if self.nanohub_flag:
+            cwd = os.getcwd()
             self.debug_tab.add_msg("download_config_cb() ------------")
+            self.debug_tab.add_msg("        cwd= "+cwd)
+            self.debug_tab.add_msg("        home_dir= "+self.home_dir)
+            # os.chdir("tmpdir")
             try:
-                self.debug_tab.add_msg("   trying to use os.system(exportfile config.xml)")
-                os.system("exportfile config.xml")
+                self.debug_tab.add_msg("   trying to use os.system(exportfile tmpdir/config.xml)")
+                os.system("exportfile tmpdir/config.xml")
             except:
-                self.debug_tab.add_msg("   exception on: os.system(exportfile config.xml)")
+                self.debug_tab.add_msg("   exception on: os.system(exportfile tmpdir/config.xml)")
 
             # try:
             #     if self.p is None:  # No process running.
@@ -1286,6 +1290,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.nanohub_flag:
             try:
                 self.debug_tab.add_msg("   trying to use os.system(exportfile svg.zip)")
+                os.chdir("tmpdir")
                     # file_str = os.path.join(self.output_dir, '*.svg')
                 file_str = "*.svg"
                 print('-------- download_svg_cb(): zip up all ',file_str)
@@ -1293,6 +1298,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                     for f in glob.glob(file_str):
                         myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
                 os.system("exportfile svg.zip")
+                os.chdir("..")
             except:
                 self.debug_tab.add_msg("   exception on: os.system(exportfile svg.zip")
 
@@ -1367,6 +1373,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.nanohub_flag:
             try:
                 self.debug_tab.add_msg("   trying to use os.system(exportfile graph.zip)")
+                os.chdir("tmpdir")
                     # file_str = os.path.join(self.output_dir, '*.svg')
                 file_str = "*.txt"
                 print('-------- download_graph): zip up all ',file_str)
@@ -1374,6 +1381,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                     for f in glob.glob(file_str):
                         myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
                 os.system("exportfile graph.zip")
+                os.chdir("..")
             except:
                 self.debug_tab.add_msg("   exception on: os.system(exportfile graph.zip")
 
