@@ -339,7 +339,7 @@ class RunModel(QWidget):
                 self.p.kill()
                 # time.sleep(2)
                 # self.p.terminate()
-                # self.p = None
+                self.p = None
                 time.sleep(1)
                 # self.run_button.setEnabled(True)
             except:
@@ -351,6 +351,7 @@ class RunModel(QWidget):
 
     def handle_stderr(self):
         try:
+            self.debug_tab.add_msg("handle_stderr(): ")
             data = self.p.readAllStandardError()
             stderr = bytes(data).decode("utf8")
             self.message(stderr)
@@ -359,6 +360,7 @@ class RunModel(QWidget):
 
     def handle_stdout(self):
         try:
+            self.debug_tab.add_msg("handle_stdout(): ")
             data = self.p.readAllStandardOutput()
             stdout = bytes(data).decode("utf8")
             self.message(stdout)
@@ -374,6 +376,7 @@ class RunModel(QWidget):
                 QProcess.Running: 'Running',
             }
             state_name = states[state]
+            self.debug_tab.add_msg("handle_state(): state_name= "+state_name)
             self.message(f"State changed: {state_name}")
         # self.message(f"Starting in a few secs...")   # only for "Starting"
         except:
