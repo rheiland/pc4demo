@@ -493,6 +493,8 @@ class Config(QWidget):
 
     def cells_csv_clicked(self, bval):
         self.csv_folder.setEnabled(bval)
+        if self.nanohub_flag:
+            self.csv_folder.setEnabled(False)
         self.csv_file.setEnabled(bval)
         if bval:
             self.csv_folder.setStyleSheet("background-color: white; color: black")
