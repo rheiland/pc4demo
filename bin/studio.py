@@ -337,6 +337,7 @@ class PhysiCellXMLCreator(QWidget):
             if self.nanohub_flag:
                 # self.rules_tab.rules_folder.setText(self.absolute_data_dir)
                 self.rules_tab.rules_folder.setText(".")
+                self.rules_tab.rules_file.setText("myrules.csv")
 
 
         if self.studio_flag:
@@ -1086,6 +1087,9 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.studio_flag:
             # self.run_tab.exec_name.setText('./project')
             self.run_tab.exec_name.setText('project')
+        if self.nanohub_flag:
+            self.rules_tab.rules_folder.setText('.')
+            self.rules_tab.rules_file.setText("myrules.csv")
 
     def biorobots_cb(self):
         # self.load_model("biorobots")
@@ -1093,6 +1097,9 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         self.load_model("biorobots")
         if self.studio_flag:
             self.run_tab.exec_name.setText('biorobots')
+        if self.nanohub_flag:
+            self.rules_tab.rules_folder.setText('.')
+            self.rules_tab.rules_file.setText("myrules.csv")
 
     def tumor_immune_cb(self):
         self.debug_tab.add_msg("\nstudio.py: tumor_immune_cb()-------------- call load_model")
