@@ -68,10 +68,10 @@ class Debug(QWidget):
         # f.close()
 
         # self.text.setPlainText("This Debug tab will lessen your nanoHUB headaches")
-        s = "This Debug tab will lessen your nanoHUB headaches"
+        s = "This tab is primarily for developers. If possible, users may want to report its contents when reporting bugs."
         self.add_msg(s)
-        s = "Line 2"
-        self.add_msg(s)
+        # s = "Line 2"
+        # self.add_msg(s)
 
         self.vbox = QVBoxLayout()
         self.vbox.addStretch(0)
