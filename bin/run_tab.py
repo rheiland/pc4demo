@@ -291,6 +291,8 @@ class RunModel(QWidget):
                     # self.vis_tab.physiboss_vis_hide
 
             if self.nanohub_flag:
+                exec_str = self.exec_name.text()
+                xml_str = self.config_xml_name.text()
                 cmd = "submit --local "+exec_str + " "+xml_str
                 self.debug_tab.add_msg("run_tab: submit --local "+exec_str + " "+xml_str)
                 os.system(cmd)
