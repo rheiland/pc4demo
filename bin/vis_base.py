@@ -331,6 +331,7 @@ class VisBase():
         self.nanohub_flag = nanohub_flag
         self.config_tab = config_tab
         self.run_tab = run_tab
+        # self.debug_tab = None
         # self.legend_tab = None
 
         self.bgcolor = [1,1,1,1]  # all 1.0 for white 
@@ -1058,131 +1059,135 @@ class VisBase():
         # print("---- cell_counts_cb(): --> window for 2D population plots")
         # self.analysis_data_wait.value = 'compute n of N ...'
 
-        if not self.get_cell_types_from_legend():
-            if not self.get_cell_types_from_config():
+        try:
+            if not self.get_cell_types_from_legend():
+                if not self.get_cell_types_from_config():
+                    return
+
+            # xml_pattern = self.output_dir + "/" + "output*.xml"
+            xml_pattern = os.path.join('.',self.output_dir,'output*.xml')
+            xml_files = glob.glob(xml_pattern)
+            # print(xml_files)
+            num_xml = len(xml_files)
+            if num_xml == 0:
+                print("last_plot_cb(): WARNING: no output*.xml files present")
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Information)
+                msgBox.setText("Could not find any " + self.output_dir + "/output*.xml")
+                msgBox.setStandardButtons(QMessageBox.Ok)
+                msgBox.exec()
                 return
 
-        xml_pattern = self.output_dir + "/" + "output*.xml"
-        xml_files = glob.glob(xml_pattern)
-        # print(xml_files)
-        num_xml = len(xml_files)
-        if num_xml == 0:
-            print("last_plot_cb(): WARNING: no output*.xml files present")
-            msgBox = QMessageBox()
-            msgBox.setIcon(QMessageBox.Information)
-            msgBox.setText("Could not find any " + self.output_dir + "/output*.xml")
-            msgBox.setStandardButtons(QMessageBox.Ok)
-            msgBox.exec()
-            return
+            xml_files.sort()
+            # print("sorted: ",xml_files)
 
-        xml_files.sort()
-        # print("sorted: ",xml_files)
+            mcds = []
+            for fname in xml_files:
+                basename = os.path.basename(fname)
+                # print("basename= ",basename)
+                # mcds = pyMCDS(basename, self.output_dir, microenv=False, graph=False, verbose=False)
+                mcds.append(pyMCDS(basename, self.output_dir, microenv=False, graph=False, verbose=False))
 
-        mcds = []
-        for fname in xml_files:
-            basename = os.path.basename(fname)
-            # print("basename= ",basename)
-            # mcds = pyMCDS(basename, self.output_dir, microenv=False, graph=False, verbose=False)
-            mcds.append(pyMCDS(basename, self.output_dir, microenv=False, graph=False, verbose=False))
+            if self.discrete_scalar not in mcds[0].data['discrete_cells']['data'].keys():
+                print(f"\ncell_counts_cb(): {self.discrete_scalar} is not saved in the output. See the Full list above. Exiting.")
+                return
 
-        if self.discrete_scalar not in mcds[0].data['discrete_cells']['data'].keys():
-            print(f"\ncell_counts_cb(): {self.discrete_scalar} is not saved in the output. See the Full list above. Exiting.")
-            return
+            tval = np.linspace(0, mcds[-1].get_time(), len(xml_files))
+            # print("  max tval=",tval)
 
-        tval = np.linspace(0, mcds[-1].get_time(), len(xml_files))
-        # print("  max tval=",tval)
+            # self.yval4 = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['cell_type'] == 4) & (mcds[idx].data['discrete_cells']['cycle_model'] < 100.) == True)) for idx in range(ds_count)] )
 
-        # self.yval4 = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['cell_type'] == 4) & (mcds[idx].data['discrete_cells']['cycle_model'] < 100.) == True)) for idx in range(ds_count)] )
+            #--------
+            if self.discrete_scalar == 'cell_type':   # number not known until run time
+                # if not self.population_plot[self.discrete_scalar]:
+                if self.population_plot[self.discrete_scalar] is None:
+                    self.population_plot[self.discrete_scalar] = PopulationPlotWindow()
 
-        #--------
-        if self.discrete_scalar == 'cell_type':   # number not known until run time
-            # if not self.population_plot[self.discrete_scalar]:
-            if self.population_plot[self.discrete_scalar] is None:
+                self.population_plot[self.discrete_scalar].ax0.cla()
+
+                # ctype_plot = []
+                lw = 2
+                # for itype, ctname in enumerate(self.celltypes_list):
+                # print("  self.celltype_name=",self.celltype_name)
+                for itype in range(len(self.celltype_name)):
+                    ctname = self.celltype_name[itype]
+                    try:
+                        ctcolor = self.celltype_color[itype]
+                    except:
+                        ctcolor = 'C' + str(itype)   # use random colors from matplotlib
+                    # print("  ctcolor=",ctcolor)
+                    if 'rgb' in ctcolor:
+                        rgb = ctcolor.replace('rgb','')
+                        rgb = rgb.replace('(','')
+                        rgb = rgb.replace(')','')
+                        rgb = rgb.split(',')
+                        # print("--- rgb after split=",rgb)
+                        ctcolor = [float(rgb[0])/255., float(rgb[1])/255., float(rgb[2])/255.]
+                        # print("--- converted rgb=",ctcolor)
+                    yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data']['cell_type'] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 100.) == True)) for idx in range(len(mcds))] )
+                    # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data']['cell_type'] == itype) == True)) for idx in range(len(mcds))] )
+                    # print("  yval=",yval)
+
+                    self.population_plot[self.discrete_scalar].ax0.plot(tval, yval, label=ctname, linewidth=lw, color=ctcolor)
+
+
+                self.population_plot[self.discrete_scalar].ax0.set_xlabel('time (mins)')
+                self.population_plot[self.discrete_scalar].ax0.set_ylabel('# of cells')
+                self.population_plot[self.discrete_scalar].ax0.set_title("cell_type", fontsize=10)
+                self.population_plot[self.discrete_scalar].ax0.legend(loc='center right', prop={'size': 8})
+                self.population_plot[self.discrete_scalar].canvas.update()
+                self.population_plot[self.discrete_scalar].canvas.draw()
+                # self.population_plot[self.discrete_scalar].ax0.legend(loc='center right', prop={'size': 8})
+                self.population_plot[self.discrete_scalar].show()
+
+            #--------
+            elif self.discrete_scalar == '"number_of_nuclei"':   # is it used yet?
+                pass
+            #--------
+            else:  # number is fixed for these (cycle_model, current_phase, is_motile, current_death_model, dead)
+
+                # [‘cell_type’, ‘cycle_model’, ‘current_phase’,‘is_motile’,‘current_death_model’,‘dead’,‘number_of_nuclei’,‘polarity’]
+                # self.discrete_scalar_len = {"cell_type":0, "cycle_model":6, "current_phase":4, "is_motile":2,"current_death_model":2, "dead":2, "number_of_nuclei":0 }
+
                 self.population_plot[self.discrete_scalar] = PopulationPlotWindow()
+                self.population_plot[self.discrete_scalar].ax0.cla()
 
-            self.population_plot[self.discrete_scalar].ax0.cla()
-
-            # ctype_plot = []
-            lw = 2
-            # for itype, ctname in enumerate(self.celltypes_list):
-            # print("  self.celltype_name=",self.celltype_name)
-            for itype in range(len(self.celltype_name)):
-                ctname = self.celltype_name[itype]
-                try:
-                    ctcolor = self.celltype_color[itype]
-                except:
+                # print("---- generate plot for ",self.discrete_scalar)
+                # ctype_plot = []
+                lw = 2
+                # for itype, ctname in enumerate(self.celltypes_list):
+                # print("  self.celltype_name=",self.celltype_name)
+                # for itype in range(self.discrete_scalar_len[self.discrete_scalar]):
+                for itype in self.discrete_scalar_vals[self.discrete_scalar]:
+                    # print("  cell_counts_cb(): itype= ",itype)
                     ctcolor = 'C' + str(itype)   # use random colors from matplotlib
-                # print("  ctcolor=",ctcolor)
-                if 'rgb' in ctcolor:
-                    rgb = ctcolor.replace('rgb','')
-                    rgb = rgb.replace('(','')
-                    rgb = rgb.replace(')','')
-                    rgb = rgb.split(',')
-                    # print("--- rgb after split=",rgb)
-                    ctcolor = [float(rgb[0])/255., float(rgb[1])/255., float(rgb[2])/255.]
-                    # print("--- converted rgb=",ctcolor)
-                yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data']['cell_type'] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 100.) == True)) for idx in range(len(mcds))] )
-                # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data']['cell_type'] == itype) == True)) for idx in range(len(mcds))] )
-                # print("  yval=",yval)
+                    # print("  ctcolor=",ctcolor)
+                    # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data']['cell_type'] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 100.) == True)) for idx in range(len(mcds))] )
 
-                self.population_plot[self.discrete_scalar].ax0.plot(tval, yval, label=ctname, linewidth=lw, color=ctcolor)
+                    # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) ) for idx in range(len(mcds))) ] )
 
+                    # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 100.) == True)) for idx in range(len(mcds))] )
+                    # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) ) for idx in range(len(mcds)))] )
+                    # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) & True) for idx in range(len(mcds)))] )
 
-            self.population_plot[self.discrete_scalar].ax0.set_xlabel('time (mins)')
-            self.population_plot[self.discrete_scalar].ax0.set_ylabel('# of cells')
-            self.population_plot[self.discrete_scalar].ax0.set_title("cell_type", fontsize=10)
-            self.population_plot[self.discrete_scalar].ax0.legend(loc='center right', prop={'size': 8})
-            self.population_plot[self.discrete_scalar].canvas.update()
-            self.population_plot[self.discrete_scalar].canvas.draw()
-            # self.population_plot[self.discrete_scalar].ax0.legend(loc='center right', prop={'size': 8})
-            self.population_plot[self.discrete_scalar].show()
+                    # TODO: fix this hackiness. Do we want to avoid counting dead cells??
+                    yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 999.) == True)) for idx in range(len(mcds))] )
+                    # print("  yval=",yval)
 
-        #--------
-        elif self.discrete_scalar == '"number_of_nuclei"':   # is it used yet?
-            pass
-        #--------
-        else:  # number is fixed for these (cycle_model, current_phase, is_motile, current_death_model, dead)
-
-            # [‘cell_type’, ‘cycle_model’, ‘current_phase’,‘is_motile’,‘current_death_model’,‘dead’,‘number_of_nuclei’,‘polarity’]
-            # self.discrete_scalar_len = {"cell_type":0, "cycle_model":6, "current_phase":4, "is_motile":2,"current_death_model":2, "dead":2, "number_of_nuclei":0 }
-
-            self.population_plot[self.discrete_scalar] = PopulationPlotWindow()
-            self.population_plot[self.discrete_scalar].ax0.cla()
-
-            # print("---- generate plot for ",self.discrete_scalar)
-            # ctype_plot = []
-            lw = 2
-            # for itype, ctname in enumerate(self.celltypes_list):
-            # print("  self.celltype_name=",self.celltype_name)
-            # for itype in range(self.discrete_scalar_len[self.discrete_scalar]):
-            for itype in self.discrete_scalar_vals[self.discrete_scalar]:
-                # print("  cell_counts_cb(): itype= ",itype)
-                ctcolor = 'C' + str(itype)   # use random colors from matplotlib
-                # print("  ctcolor=",ctcolor)
-                # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data']['cell_type'] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 100.) == True)) for idx in range(len(mcds))] )
-
-                # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) ) for idx in range(len(mcds))) ] )
-
-                # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 100.) == True)) for idx in range(len(mcds))] )
-                # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) ) for idx in range(len(mcds)))] )
-                # yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) & True) for idx in range(len(mcds)))] )
-
-                # TODO: fix this hackiness. Do we want to avoid counting dead cells??
-                yval = np.array( [(np.count_nonzero((mcds[idx].data['discrete_cells']['data'][self.discrete_scalar] == itype) & (mcds[idx].data['discrete_cells']['data']['cycle_model'] < 999.) == True)) for idx in range(len(mcds))] )
-                # print("  yval=",yval)
-
-                mylabel = str(itype)
-                self.population_plot[self.discrete_scalar].ax0.plot(tval, yval, label=mylabel, linewidth=lw, color=ctcolor)
-                # self.population_plot[self.discrete_scalar].ax0.plot(tval, yval, linewidth=lw, color=ctcolor)
+                    mylabel = str(itype)
+                    self.population_plot[self.discrete_scalar].ax0.plot(tval, yval, label=mylabel, linewidth=lw, color=ctcolor)
+                    # self.population_plot[self.discrete_scalar].ax0.plot(tval, yval, linewidth=lw, color=ctcolor)
 
 
-            self.population_plot[self.discrete_scalar].ax0.set_xlabel('time (mins)')
-            self.population_plot[self.discrete_scalar].ax0.set_ylabel('# of cells')
-            self.population_plot[self.discrete_scalar].ax0.set_title(self.discrete_scalar, fontsize=10)
-            self.population_plot[self.discrete_scalar].ax0.legend(loc='center right', prop={'size': 8})
-            self.population_plot[self.discrete_scalar].canvas.update()
-            self.population_plot[self.discrete_scalar].canvas.draw()
-            self.population_plot[self.discrete_scalar].show()
+                self.population_plot[self.discrete_scalar].ax0.set_xlabel('time (mins)')
+                self.population_plot[self.discrete_scalar].ax0.set_ylabel('# of cells')
+                self.population_plot[self.discrete_scalar].ax0.set_title(self.discrete_scalar, fontsize=10)
+                self.population_plot[self.discrete_scalar].ax0.legend(loc='center right', prop={'size': 8})
+                self.population_plot[self.discrete_scalar].canvas.update()
+                self.population_plot[self.discrete_scalar].canvas.draw()
+                self.population_plot[self.discrete_scalar].show()
+        except:
+            print("\n-------------- Exception in cell_counts_cb()")
 
 
     def disable_physiboss_info(self):
