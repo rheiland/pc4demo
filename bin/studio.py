@@ -1261,15 +1261,21 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                 if self.p is None:  # No process running.
                     self.debug_tab.add_msg("   starting QProcess")
                     self.p = QProcess()
+                    self.debug_tab.add_msg("   QProcess 1")
                     self.p.readyReadStandardOutput.connect(self.handle_stdout)
+                    self.debug_tab.add_msg("   QProcess 2")
                     self.p.readyReadStandardError.connect(self.handle_stderr)
+                    self.debug_tab.add_msg("   QProcess 3")
                     self.p.stateChanged.connect(self.handle_state)
+                    self.debug_tab.add_msg("   QProcess 4")
                     self.p.finished.connect(self.process_finished)  # Clean up once complete.
+                    self.debug_tab.add_msg("   QProcess 5")
 
                     # file_str = os.path.join(self.output_dir, '*.svg')
                     # file_str = "*.csv"
                     # print('-------- download_csv_cb(): zip up all ',file_str)
                     file_str = os.path.join(self.home_dir,'*.csv')
+                    self.debug_tab.add_msg("   files_str="+files_str)
                     files_l = glob.glob(file_str)
                     self.debug_tab.add_msg("   files_l="+files_l)
                     # file_str = "*.svg"
