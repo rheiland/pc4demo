@@ -464,7 +464,7 @@ class PhysiCellXMLCreator(QWidget):
                 if self.nanohub_flag:
                     try:
                         toolpath = os.environ['TOOLPATH']
-                        self.debug_tab.add_msg(" studio.py: just fyi, TOOLPATH is "+toolpath)
+                        self.debug_tab.add_msg(" studio.py: TOOLPATH is "+toolpath)
                     except:
                         print("studio.py: unable to get TOOLPATH")
 
