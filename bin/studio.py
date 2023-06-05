@@ -683,6 +683,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.nanohub_flag:
             self.download_menu = file_menu.addMenu('Download')
             self.download_config_item = self.download_menu.addAction("Download config.xml", self.download_config_cb)
+            self.download_csv_item = self.download_menu.addAction("Download cells,rules (.csv) data", self.download_csv_cb)
             self.download_rules_item = self.download_menu.addAction("Download rules.txt", self.download_rules_cb)
             self.download_svg_item = self.download_menu.addAction("Download cell (.svg) data", self.download_svg_cb)
             self.download_mat_item = self.download_menu.addAction("Download full (.mat) data", self.download_full_cb)
@@ -1271,6 +1272,26 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             except:
                 self.debug_tab.add_msg("   Error: unable to download tmpdir/rules.txt")
         return
+
+    def download_csv_cb(self):
+        if self.nanohub_flag:
+            self.debug_tab.add_msg("download_csv_cb() ------------")
+            self.debug_tab.add_msg("        home_dir= "+self.home_dir)
+            try:
+                # os.chdir("tmpdir")
+                file_str = os.path.join(self.home_dir,'*.csv')
+                self.debug_tab.add_msg("   "+file_str)
+                # file_str = "*.svg"
+                self.debug_tab.add_msg("   next, zip all .csv")
+                with zipfile.ZipFile('csv.zip', 'w') as myzip:
+                    for f in glob.glob(file_str):
+                        myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                self.debug_tab.add_msg("   lastly, os.system(exportfile csv.zip)")
+                os.system("exportfile csv.zip")
+                # os.chdir("..")
+            except:
+                self.debug_tab.add_msg("   Error: exception occurred")
+
 
     def download_svg_cb(self):
         if self.nanohub_flag:
