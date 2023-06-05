@@ -1026,9 +1026,9 @@ class Rules(QWidget):
             cell_type = behavior[len("fuse to")+1:]
             base_val = self.celldef_tab.param_d[key0]['fusion_rate'][cell_type]
         elif btokens[0] == "immunogenicity":
-            base_val = '0.5'
+            base_val = '1.0'
         elif btokens[0] == "is_movable":
-            base_val = '0.5'
+            base_val = '1.0'
         elif behavior[0:len("transform to")] == "transform to":
             cell_type = behavior[len("transform to")+1:]
             base_val = self.celldef_tab.param_d[key0]['transformation_rate'][cell_type]
