@@ -1257,19 +1257,61 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.debug_tab.add_msg("download_csv_cb() ------------")
             self.debug_tab.add_msg("        home_dir= "+self.home_dir)
             try:
-                # os.chdir("tmpdir")
-                file_str = os.path.join(self.home_dir,'*.csv')
-                self.debug_tab.add_msg("   "+file_str)
-                # file_str = "*.svg"
-                self.debug_tab.add_msg("   next, zip all .csv")
-                with zipfile.ZipFile('csv.zip', 'w') as myzip:
-                    for f in glob.glob(file_str):
-                        myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-                self.debug_tab.add_msg("   lastly, os.system(exportfile csv.zip)")
-                os.system("exportfile csv.zip")
-                # os.chdir("..")
+                if self.p is None:  # No process running.
+                    self.p = QProcess()
+                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
+                    self.p.readyReadStandardError.connect(self.handle_stderr)
+                    self.p.stateChanged.connect(self.handle_state)
+                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
+
+                    # file_str = os.path.join(self.output_dir, '*.svg')
+                    # file_str = "*.csv"
+                    # print('-------- download_csv_cb(): zip up all ',file_str)
+                    file_str = os.path.join(self.home_dir,'*.csv')
+                    files_l = glob.glob(file_str)
+                    self.debug_tab.add_msg("   files_l="+files_l)
+                    # file_str = "*.svg"
+                    self.debug_tab.add_msg("   next, zip all .csv")
+                    with zipfile.ZipFile('csv.zip', 'w') as myzip:
+                        for f in glob.glob(file_str):
+                            # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                            base_fname = os.path.basename(f)
+                            self.debug_tab.add_msg("   base_fname="+base_fname)
+                            # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                            myzip.write(f, base_fname)   # 2nd arg avoids full filename 
+                    self.debug_tab.add_msg("   exportfile doing p.start(csv.zip)")
+                    self.p.start("exportfile csv.zip")
+                else:
+                    self.debug_tab.add_msg(" download_csv_cb():  self.p is NOT None; just return!")
+                    print(" download_csv_cb():  self.p is NOT None; just return!")
             except:
-                self.debug_tab.add_msg("   Error: exception occurred")
+                self.message("Unable to download svg.zip")
+                print("Unable to download csv.zip")
+                self.p = None
+        return
+
+    # def download_csv_cb(self):
+    #     if self.nanohub_flag:
+    #         self.debug_tab.add_msg("download_csv_cb() ------------")
+    #         self.debug_tab.add_msg("        home_dir= "+self.home_dir)
+    #         try:
+    #             # os.chdir("tmpdir")
+    #             file_str = os.path.join(self.home_dir,'*.csv')
+    #             files_l = glob.glob(file_str)
+    #             self.debug_tab.add_msg("   files_l="+files_l)
+    #             # file_str = "*.svg"
+    #             self.debug_tab.add_msg("   next, zip all .csv")
+    #             with zipfile.ZipFile('csv.zip', 'w') as myzip:
+    #                 for f in glob.glob(file_str):
+    #                     base_fname = os.path.basename(f)
+    #                     self.debug_tab.add_msg("   base_fname=",base_fname)
+    #                     # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+    #                     myzip.write(f, base_fname)   # 2nd arg avoids full filename 
+    #             self.debug_tab.add_msg("   lastly, os.system(exportfile csv.zip)")
+    #             os.system("exportfile csv.zip")
+    #             # os.chdir("..")
+    #         except:
+    #             self.debug_tab.add_msg("   Error: exception occurred")
 
 
     def download_svg_cb(self):
