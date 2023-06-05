@@ -290,17 +290,8 @@ class RunModel(QWidget):
                     self.vis_tab.disable_physiboss_info()
                     # self.vis_tab.physiboss_vis_hide
 
-            if self.nanohub_flag:
-                exec_str = self.exec_name.text()
-                xml_str = self.config_xml_name.text()
-                cmd = "submit --local "+exec_str + " "+xml_str
-                self.debug_tab.add_msg("run_tab: submit --local "+exec_str + " "+xml_str)
-                os.system(cmd)
-                self.debug_tab.add_msg("run_tab: "+cmd)
-                cwd = os.getcwd()
-                self.debug_tab.add_msg("                cwd= " + cwd)
 
-            elif self.p is None:  # No process running.
+            if self.p is None:  # No process running.
                 self.enable_run(False)
                 self.tab_widget.setTabEnabled(6, True)   # enable (allow to be selected) the Plot tab
                 # self.tab_widget.setTabEnabled(7, True)   # enable Legend tab
@@ -314,13 +305,9 @@ class RunModel(QWidget):
                 exec_str = self.exec_name.text()
                 xml_str = self.config_xml_name.text()
                 print("\n--- run_tab:  xml_str before run is ",xml_str)
-                # if self.nanohub_flag:
-                if False:
-                    # self.p.start("submit",["--local",exec_str,xml_str])
-                    cmd = "submit --local "+exec_str + " "+xml_str
+                if self.nanohub_flag:
+                    self.p.start("submit",["--local",exec_str,xml_str])
                     self.debug_tab.add_msg("run_tab: submit --local "+exec_str + " "+xml_str)
-                    os.system(cmd)
-                    self.debug_tab.add_msg("run_tab: "+cmd)
                     cwd = os.getcwd()
                     self.debug_tab.add_msg("                cwd= " + cwd)
                     # self.debug_tab.add_msg("self.p = "+str(self.p))
