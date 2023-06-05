@@ -1257,7 +1257,9 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.debug_tab.add_msg("download_csv_cb() ------------")
             self.debug_tab.add_msg("        home_dir= "+self.home_dir)
             try:
+                self.debug_tab.add_msg("   in try block")
                 if self.p is None:  # No process running.
+                    self.debug_tab.add_msg("   starting QProcess")
                     self.p = QProcess()
                     self.p.readyReadStandardOutput.connect(self.handle_stdout)
                     self.p.readyReadStandardError.connect(self.handle_stderr)
