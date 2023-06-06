@@ -334,10 +334,10 @@ class PhysiCellXMLCreator(QWidget):
                 self.rules_tab.absolute_data_dir = self.absolute_data_dir
             self.rules_tab.fill_gui()
 
-            if self.nanohub_flag:
-                # self.rules_tab.rules_folder.setText(self.absolute_data_dir)
-                self.rules_tab.rules_folder.setText(".")
-                self.rules_tab.rules_file.setText("myrules.csv")
+            # if self.nanohub_flag:
+            #     # self.rules_tab.rules_folder.setText(self.absolute_data_dir)
+            #     self.rules_tab.rules_folder.setText(".")
+            #     self.rules_tab.rules_file.setText("myrules.csv")
 
 
         if self.studio_flag:

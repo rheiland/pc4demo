@@ -552,9 +552,9 @@
 
     <cell_rules>
         <rulesets>
-            <ruleset protocol="CBHG" version="2.0" format="csv" enabled="false">
-                <folder>../data</folder>
-                <filename></filename>
+            <ruleset protocol="CBHG" version="2.0" format="csv" enabled="true">
+                <folder>.</folder>
+                <filename>bots_rules.csv</filename>
             </ruleset>
         </rulesets>
         <settings />
