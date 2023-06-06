@@ -20,6 +20,7 @@ import argparse
 import logging
 import traceback
 import shutil # for possible copy of file
+import glob,zipfile
 from pathlib import Path
 import xml.etree.ElementTree as ET  # https://docs.python.org/2/library/xml.etree.elementtree.html
 # from xml.dom import minidom   # possibly explore later if we want to access/update *everything* in the DOM
@@ -28,7 +29,7 @@ import numpy as np
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPalette, QColor, QIcon, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QObject, pyqtSignal, pyqtSlot, QRunnable, QThreadPool
 from PyQt5.QtWidgets import QStyleFactory
 
 from pretty_print_xml import pretty_print
@@ -45,6 +46,7 @@ from populate_tree_cell_defs import populate_tree_cell_defs
 from run_tab import RunModel 
 from debug_tab import Debug   # nanohub
 # from legend_tab import Legend 
+# from nanohub_files import HubFiles
 
 try:
     from simulariumio import UnitData, MetaData, DisplayData, DISPLAY_TYPE, ModelMetaData
@@ -77,7 +79,69 @@ def quit_cb():
     global studio_app
     studio_app.quit()
 
-  
+#-----------------------------------  
+class WorkerSignals(QObject):
+    '''
+    Defines the signals available from a running worker thread.
+    Supported signals are:
+    finished
+        No data
+    error
+        tuple (exctype, value, traceback.format_exc() )
+    result
+        object data returned from processing, anything
+    progress
+        int indicating % progress
+    '''
+    finished = pyqtSignal()
+    error = pyqtSignal(tuple)
+    result = pyqtSignal(object)
+    progress = pyqtSignal(int)
+
+
+class Worker(QRunnable):
+    '''
+    Worker thread
+    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
+    :param callback: The function callback to run on this worker thread. Supplied args and
+                     kwargs will be passed through to the runner.
+    :type callback: function
+    :param args: Arguments to pass to the callback function
+    :param kwargs: Keywords to pass to the callback function
+    '''
+
+    def __init__(self, fn, *args, **kwargs):
+        super(Worker, self).__init__()
+
+        # Store constructor arguments (re-used for processing)
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = WorkerSignals()
+
+        # Add the callback to our kwargs
+        # self.kwargs['progress_callback'] = self.signals.progress
+
+    @pyqtSlot()
+    def run(self):
+        '''
+        Initialise the runner function with passed args, kwargs.
+        '''
+
+        # Retrieve args/kwargs here; and fire processing using them
+        try:
+            result = self.fn(*self.args, **self.kwargs)
+        except:
+            traceback.print_exc()
+            exctype, value = sys.exc_info()[:2]
+            self.signals.error.emit((exctype, value, traceback.format_exc()))
+        else:
+            self.signals.result.emit(result)  # Return the result of the processing
+        finally:
+            self.signals.finished.emit()  # Done
+
+#-----------------------------------  
 class PhysiCellXMLCreator(QWidget):
     def __init__(self, config_file, studio_flag, skip_validate_flag, rules_flag, model3D_flag, tensor_flag, exec_file, nanohub_flag, is_movable_flag, debug_flag, parent = None):
         super(PhysiCellXMLCreator, self).__init__(parent)
@@ -140,7 +204,11 @@ class PhysiCellXMLCreator(QWidget):
         # self.debug_tab.add_msg("--- studio.py: self.current_dir = ",self.current_dir )
         # logging.debug(f'self.current_dir = {self.current_dir}')
 
+
+        self.threadpool = None
         if self.nanohub_flag:
+            self.threadpool = QThreadPool()
+            # self.hub_files = HubFiles()
             # binDirectory = os.path.dirname(os.path.abspath(__file__))
             # dataDirectory = os.path.join(binDirectory,'..','data')
 
@@ -205,6 +273,14 @@ class PhysiCellXMLCreator(QWidget):
             if self.nanohub_flag:
                 # model_name = "rules"
                 model_name = "template"
+
+                #------- copy the empty rules.csv needed for template
+                tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
+                self.home_dir = os.getcwd()
+                rules_file0 = os.path.join(tool_dir,'data',"rules_empty.csv")
+                rules_file1 = os.path.join(self.home_dir,"rules.csv")
+                shutil.copy(rules_file0, rules_file1)
+
             self.current_xml_file = os.path.join(self.studio_config_dir, model_name + ".xml")
 
 
@@ -685,6 +761,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.download_menu = file_menu.addMenu('Download')
             self.download_config_item = self.download_menu.addAction("Download config.xml", self.download_config_cb)
             self.download_csv_item = self.download_menu.addAction("Download cells,rules (.csv) data", self.download_csv_cb)
+            # self.download_csv_item = self.download_menu.addAction("Download cells,rules (.csv) data", self.download_csv_thread_cb)
             self.download_rules_item = self.download_menu.addAction("Download rules.txt", self.download_rules_cb)
             self.download_svg_item = self.download_menu.addAction("Download cell (.svg) data", self.download_svg_cb)
             self.download_mat_item = self.download_menu.addAction("Download full (.mat) data", self.download_full_cb)
@@ -1107,11 +1184,17 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
 
         if self.studio_flag:
             self.run_tab.exec_name.setText('project')
+
         if self.nanohub_flag:
             # os.chdir(self.home_dir)
             tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
-            # rules_file0 = Path(self.absolute_data_dir, "cell_rules.csv")
             self.debug_tab.add_msg("tumor_immune_cb(): tool_dir=TOOLPATH= "+tool_dir)
+
+            #------- copy the empty rules.csv needed for template
+            rules_file0 = os.path.join(tool_dir,'data',"rules.csv")
+
+            #------- copy the files needed for tumor_immune
+            # rules_file0 = Path(self.absolute_data_dir, "cell_rules.csv")
             rules_file0 = os.path.join(tool_dir,'data',"cell_rules.csv")
             self.debug_tab.add_msg("tumor_immune_cb(): rules_file0= "+rules_file0)
             # rules_file1 = os.path.join(self.home_dir,'data',"cell_rules.csv")
@@ -1252,6 +1335,37 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                 self.debug_tab.add_msg("   Error: unable to download tmpdir/rules.txt")
         return
 
+    def zip_csv_fn(self):
+        self.debug_tab.add_msg(">>>> in zip_csv_fn()")
+        file_str = os.path.join(self.home_dir,'*.csv')
+        self.debug_tab.add_msg("   files_str="+file_str)
+        files_l = glob.glob(file_str)
+        # self.debug_tab.add_msg("   files_l="+files_l)
+        # file_str = "*.svg"
+        self.debug_tab.add_msg("   next, zip all .csv")
+        with zipfile.ZipFile('csv.zip', 'w') as myzip:
+            for f in glob.glob(file_str):
+                # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                base_fname = os.path.basename(f)
+                self.debug_tab.add_msg("   base_fname="+base_fname)
+                # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                myzip.write(f, base_fname)   # 2nd arg avoids full filename 
+        # self.debug_tab.add_msg("   exportfile doing p.start(csv.zip)")
+        # self.p.start("exportfile csv.zip")
+        try:
+            os.system("exportfile csv.zip")
+        except:
+            self.debug_tab.add_msg("   exception on os.system(exportfile csv.zip)")
+
+    def download_csv_thread_cb(self):
+        # Pass the function to execute
+        worker = Worker(self.zip_csv_fn) # Any other args, kwargs are passed to the run function
+        # worker.signals.result.connect(self.print_output)
+        # worker.signals.finished.connect(self.thread_complete)
+        # worker.signals.progress.connect(self.progress_fn)
+
+        self.threadpool.start(worker)
+
     def download_csv_cb(self):
         if self.nanohub_flag:
             self.debug_tab.add_msg("download_csv_cb() ------------")
@@ -1277,7 +1391,7 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                     file_str = os.path.join(self.home_dir,'*.csv')
                     self.debug_tab.add_msg("   files_str="+files_str)
                     files_l = glob.glob(file_str)
-                    self.debug_tab.add_msg("   files_l="+files_l)
+                    # self.debug_tab.add_msg("   files_l="+files_l)
                     # file_str = "*.svg"
                     self.debug_tab.add_msg("   next, zip all .csv")
                     with zipfile.ZipFile('csv.zip', 'w') as myzip:
@@ -1287,13 +1401,13 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                             self.debug_tab.add_msg("   base_fname="+base_fname)
                             # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
                             myzip.write(f, base_fname)   # 2nd arg avoids full filename 
-                    self.debug_tab.add_msg("   exportfile doing p.start(csv.zip)")
+                    self.debug_tab.add_msg("   doing p.start(exportfile csv.zip)")
                     self.p.start("exportfile csv.zip")
                 else:
                     self.debug_tab.add_msg(" download_csv_cb():  self.p is NOT None; just return!")
                     print(" download_csv_cb():  self.p is NOT None; just return!")
             except:
-                self.message("Unable to download svg.zip")
+                # self.message("Unable to download csv.zip")
                 print("Unable to download csv.zip")
                 self.p = None
         return
@@ -1303,11 +1417,9 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
     #         self.debug_tab.add_msg("download_csv_cb() ------------")
     #         self.debug_tab.add_msg("        home_dir= "+self.home_dir)
     #         try:
-    #             # os.chdir("tmpdir")
     #             file_str = os.path.join(self.home_dir,'*.csv')
     #             files_l = glob.glob(file_str)
     #             self.debug_tab.add_msg("   files_l="+files_l)
-    #             # file_str = "*.svg"
     #             self.debug_tab.add_msg("   next, zip all .csv")
     #             with zipfile.ZipFile('csv.zip', 'w') as myzip:
     #                 for f in glob.glob(file_str):
@@ -1317,7 +1429,6 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
     #                     myzip.write(f, base_fname)   # 2nd arg avoids full filename 
     #             self.debug_tab.add_msg("   lastly, os.system(exportfile csv.zip)")
     #             os.system("exportfile csv.zip")
-    #             # os.chdir("..")
     #         except:
     #             self.debug_tab.add_msg("   Error: exception occurred")
 
