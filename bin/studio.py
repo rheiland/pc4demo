@@ -20,7 +20,7 @@ import argparse
 import logging
 import traceback
 import shutil # for possible copy of file
-import glob,zipfile
+import glob, zipfile
 from pathlib import Path
 import xml.etree.ElementTree as ET  # https://docs.python.org/2/library/xml.etree.elementtree.html
 # from xml.dom import minidom   # possibly explore later if we want to access/update *everything* in the DOM
@@ -278,7 +278,12 @@ class PhysiCellXMLCreator(QWidget):
                 tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
                 self.home_dir = os.getcwd()
                 rules_file0 = os.path.join(tool_dir,'data',"rules_empty.csv")
+                # for template
                 rules_file1 = os.path.join(self.home_dir,"rules.csv")
+                shutil.copy(rules_file0, rules_file1)
+
+                # for biorobots
+                rules_file1 = os.path.join(self.home_dir,"bots_rules.csv")
                 shutil.copy(rules_file0, rules_file1)
 
             self.current_xml_file = os.path.join(self.studio_config_dir, model_name + ".xml")
@@ -1189,9 +1194,6 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             # os.chdir(self.home_dir)
             tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
             self.debug_tab.add_msg("tumor_immune_cb(): tool_dir=TOOLPATH= "+tool_dir)
-
-            #------- copy the empty rules.csv needed for template
-            rules_file0 = os.path.join(tool_dir,'data',"rules.csv")
 
             #------- copy the files needed for tumor_immune
             # rules_file0 = Path(self.absolute_data_dir, "cell_rules.csv")
