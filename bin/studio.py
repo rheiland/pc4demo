@@ -1355,82 +1355,84 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         try:
             os.system("exportfile csv.zip")
         except:
-            self.debug_tab.add_msg("   exception on os.system(exportfile csv.zip)")
+            self.debug_tab.add_msg("   zip_csv_fn(): exception on os.system(exportfile csv.zip)")
+            print("   zip_csv_fn(): exception on os.system(exportfile csv.zip)")
 
-    def download_csv_thread_cb(self):
-        # Pass the function to execute
-        worker = Worker(self.zip_csv_fn) # Any other args, kwargs are passed to the run function
-        # worker.signals.result.connect(self.print_output)
-        # worker.signals.finished.connect(self.thread_complete)
-        # worker.signals.progress.connect(self.progress_fn)
+    # def download_csv_thread_cb(self):
+    #     # Pass the function to execute
+    #     worker = Worker(self.zip_csv_fn) # Any other args, kwargs are passed to the run function
+    #     # worker.signals.result.connect(self.print_output)
+    #     # worker.signals.finished.connect(self.thread_complete)
+    #     # worker.signals.progress.connect(self.progress_fn)
 
-        self.threadpool.start(worker)
+    #     self.threadpool.start(worker)
+
+    # def download_csv_cb_qprocess(self):
+    #     if self.nanohub_flag:
+    #         self.debug_tab.add_msg("download_csv_cb() ------------")
+    #         self.debug_tab.add_msg("        home_dir= "+self.home_dir)
+    #         try:
+    #             self.debug_tab.add_msg("   in try block")
+    #             if self.p is None:  # No process running.
+    #                 self.debug_tab.add_msg("   starting QProcess")
+    #                 self.p = QProcess()
+    #                 self.debug_tab.add_msg("   QProcess 1")
+    #                 self.p.readyReadStandardOutput.connect(self.handle_stdout)
+    #                 self.debug_tab.add_msg("   QProcess 2")
+    #                 self.p.readyReadStandardError.connect(self.handle_stderr)
+    #                 self.debug_tab.add_msg("   QProcess 3")
+    #                 self.p.stateChanged.connect(self.handle_state)
+    #                 self.debug_tab.add_msg("   QProcess 4")
+    #                 self.p.finished.connect(self.process_finished)  # Clean up once complete.
+    #                 self.debug_tab.add_msg("   QProcess 5")
+
+    #                 # file_str = os.path.join(self.output_dir, '*.svg')
+    #                 # file_str = "*.csv"
+    #                 # print('-------- download_csv_cb(): zip up all ',file_str)
+    #                 file_str = os.path.join(self.home_dir,'*.csv')
+    #                 self.debug_tab.add_msg("   files_str="+files_str)
+    #                 files_l = glob.glob(file_str)
+    #                 # self.debug_tab.add_msg("   files_l="+files_l)
+    #                 # file_str = "*.svg"
+    #                 self.debug_tab.add_msg("   next, zip all .csv")
+    #                 with zipfile.ZipFile('csv.zip', 'w') as myzip:
+    #                     for f in glob.glob(file_str):
+    #                         # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+    #                         base_fname = os.path.basename(f)
+    #                         self.debug_tab.add_msg("   base_fname="+base_fname)
+    #                         # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+    #                         myzip.write(f, base_fname)   # 2nd arg avoids full filename 
+    #                 self.debug_tab.add_msg("   doing p.start(exportfile csv.zip)")
+    #                 self.p.start("exportfile csv.zip")
+    #             else:
+    #                 self.debug_tab.add_msg(" download_csv_cb():  self.p is NOT None; just return!")
+    #                 print(" download_csv_cb():  self.p is NOT None; just return!")
+    #         except:
+    #             # self.message("Unable to download csv.zip")
+    #             print("Unable to download csv.zip")
+    #             self.p = None
+    #     return
 
     def download_csv_cb(self):
         if self.nanohub_flag:
             self.debug_tab.add_msg("download_csv_cb() ------------")
             self.debug_tab.add_msg("        home_dir= "+self.home_dir)
             try:
-                self.debug_tab.add_msg("   in try block")
-                if self.p is None:  # No process running.
-                    self.debug_tab.add_msg("   starting QProcess")
-                    self.p = QProcess()
-                    self.debug_tab.add_msg("   QProcess 1")
-                    self.p.readyReadStandardOutput.connect(self.handle_stdout)
-                    self.debug_tab.add_msg("   QProcess 2")
-                    self.p.readyReadStandardError.connect(self.handle_stderr)
-                    self.debug_tab.add_msg("   QProcess 3")
-                    self.p.stateChanged.connect(self.handle_state)
-                    self.debug_tab.add_msg("   QProcess 4")
-                    self.p.finished.connect(self.process_finished)  # Clean up once complete.
-                    self.debug_tab.add_msg("   QProcess 5")
-
-                    # file_str = os.path.join(self.output_dir, '*.svg')
-                    # file_str = "*.csv"
-                    # print('-------- download_csv_cb(): zip up all ',file_str)
-                    file_str = os.path.join(self.home_dir,'*.csv')
-                    self.debug_tab.add_msg("   files_str="+files_str)
-                    files_l = glob.glob(file_str)
-                    # self.debug_tab.add_msg("   files_l="+files_l)
-                    # file_str = "*.svg"
-                    self.debug_tab.add_msg("   next, zip all .csv")
-                    with zipfile.ZipFile('csv.zip', 'w') as myzip:
-                        for f in glob.glob(file_str):
-                            # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-                            base_fname = os.path.basename(f)
-                            self.debug_tab.add_msg("   base_fname="+base_fname)
-                            # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-                            myzip.write(f, base_fname)   # 2nd arg avoids full filename 
-                    self.debug_tab.add_msg("   doing p.start(exportfile csv.zip)")
-                    self.p.start("exportfile csv.zip")
-                else:
-                    self.debug_tab.add_msg(" download_csv_cb():  self.p is NOT None; just return!")
-                    print(" download_csv_cb():  self.p is NOT None; just return!")
+                file_str = os.path.join(self.home_dir,'*.csv')
+                files_l = glob.glob(file_str)
+                # self.debug_tab.add_msg("   files_l="+files_l)
+                self.debug_tab.add_msg("   next, zip all .csv")
+                with zipfile.ZipFile('csv.zip', 'w') as myzip:
+                    for f in glob.glob(file_str):
+                        base_fname = os.path.basename(f)
+                        self.debug_tab.add_msg("   base_fname=",base_fname)
+                        # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+                        myzip.write(f, base_fname)   # 2nd arg avoids full filename 
+                self.debug_tab.add_msg("   lastly, os.system(exportfile csv.zip)")
+                os.system("exportfile csv.zip")
             except:
-                # self.message("Unable to download csv.zip")
-                print("Unable to download csv.zip")
-                self.p = None
-        return
-
-    # def download_csv_cb(self):
-    #     if self.nanohub_flag:
-    #         self.debug_tab.add_msg("download_csv_cb() ------------")
-    #         self.debug_tab.add_msg("        home_dir= "+self.home_dir)
-    #         try:
-    #             file_str = os.path.join(self.home_dir,'*.csv')
-    #             files_l = glob.glob(file_str)
-    #             self.debug_tab.add_msg("   files_l="+files_l)
-    #             self.debug_tab.add_msg("   next, zip all .csv")
-    #             with zipfile.ZipFile('csv.zip', 'w') as myzip:
-    #                 for f in glob.glob(file_str):
-    #                     base_fname = os.path.basename(f)
-    #                     self.debug_tab.add_msg("   base_fname=",base_fname)
-    #                     # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-    #                     myzip.write(f, base_fname)   # 2nd arg avoids full filename 
-    #             self.debug_tab.add_msg("   lastly, os.system(exportfile csv.zip)")
-    #             os.system("exportfile csv.zip")
-    #         except:
-    #             self.debug_tab.add_msg("   Error: exception occurred")
+                self.debug_tab.add_msg("   Error: exception occurred")
+                print("   download_csv_cb(): Error: exception occurred")
 
 
     def download_svg_cb(self):
