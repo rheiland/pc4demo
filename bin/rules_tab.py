@@ -948,7 +948,8 @@ class Rules(QWidget):
     def update_base_value(self):
         print("\n-------update_base_value(self)")
         behavior = self.response_combobox.currentText()
-        key0 = self.celltype_name
+        # key0 = self.celltype_name
+        key0 = self.celltype_combobox.currentText()
         print("     behavior=",behavior)
         btokens = behavior.split()
         if len(btokens) == 0:
@@ -978,6 +979,8 @@ class Rules(QWidget):
                 print("---- got exception")
                 return
         elif btokens[0] == 'apoptosis':
+            print("---- update_base_value(): key0=",key0)
+            print("\n self.celldef_tab.param_d[key0]",self.celldef_tab.param_d[key0])
             base_val = self.celldef_tab.param_d[key0]['apoptosis_death_rate']
         elif btokens[0] == 'necrosis':
             base_val = self.celldef_tab.param_d[key0]['necrosis_death_rate']
@@ -1685,7 +1688,10 @@ class Rules(QWidget):
                 # rules_text = self.rules_text.toPlainText()
                 # f.write(rules_text )
                 # print("rules_tab.py: save_rules_cb(): self.num_rules= ",self.num_rules)
-                for irow in range(self.num_rules):
+
+                # Note: self.num_rules only reflects those entered via the wizard, not manually.
+                # for irow in range(self.num_rules):  
+                for irow in range(100):   # rwh: hack
         # self.rules_celltype_idx = 0
         # self.rules_response_idx = 1
         # self.rules_minval_idx = 2
@@ -1697,6 +1703,9 @@ class Rules(QWidget):
         # self.rules_hillpower_idx = 8
         # self.rules_applydead_idx = 9
                     rule_str = self.rules_table.cellWidget(irow, self.rules_celltype_idx).text()
+                    print("   irow=",irow, ", col 1 text=",rule_str)
+                    if rule_str == '':
+                        break
                     rule_str += ','
                     rule_str += self.rules_table.cellWidget(irow, self.rules_signal_idx).text()
                     rule_str += ','
