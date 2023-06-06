@@ -1171,7 +1171,14 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.run_tab.exec_name.setText('project')
         if self.nanohub_flag:
             self.rules_tab.rules_folder.setText('.')
-            self.rules_tab.rules_file.setText("myrules.csv")
+            # self.rules_tab.rules_file.setText("myrules.csv")
+            self.rules_tab.rules_file.setText("rules.csv")
+
+            tool_dir = os.environ['TOOLPATH']  # rwh: Beware! this is read-only
+            rules_file0 = os.path.join(tool_dir,'data',"rules_empty.csv")
+            # for template
+            rules_file1 = os.path.join(self.home_dir,"rules.csv")
+            shutil.copy(rules_file0, rules_file1)
 
     def biorobots_cb(self):
         # self.load_model("biorobots")
