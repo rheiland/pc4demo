@@ -767,13 +767,16 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             self.download_config_item = self.download_menu.addAction("Download config.xml", self.download_config_cb)
             # self.download_csv_item = self.download_menu.addAction("Download cells,rules (.csv) data", self.download_csv_thread_cb)
             self.download_rules0_item = self.download_menu.addAction("Download rules.csv", self.download_rules_csv_cb)
-            self.download_rules1_item = self.download_menu.addAction("Download rules.txt (if sim completes)", self.download_rules_txt_cb)
+            self.download_rules1_item = self.download_menu.addAction("Download rules.txt", self.download_rules_txt_cb)
             self.download_svg_item = self.download_menu.addAction("Download cell (.svg) data", self.download_svg_cb)
             self.download_mat_item = self.download_menu.addAction("Download full (.mat) data", self.download_full_cb)
             self.download_graph_item = self.download_menu.addAction("Download cell graph (.txt) data", self.download_graph_cb)
             self.download_csv_item = self.download_menu.addAction("Download all .csv data", self.download_csv_cb)
             # self.download_menu_item.setEnabled(False)
             # self.download_menu.setEnabled(False)
+
+            self.upload_menu = file_menu.addMenu('Upload')
+            self.upload_config_item = self.upload_menu.addAction("Upload mymodel.xml", self.upload_config_cb)
         else:
             self.download_menu = None
 
@@ -1520,8 +1523,22 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
             except:
                 self.debug_tab.add_msg("   Error: exception occurred")
 
+    #----------------------------------
+    def upload_config_cb(self):
+        if self.nanohub_flag:
+            cwd = os.getcwd()
+            self.debug_tab.add_msg("upload_config_cb() ------------")
+            self.debug_tab.add_msg("        cwd= "+cwd)
+            self.debug_tab.add_msg("        home_dir= "+self.home_dir)
+            # os.chdir("tmpdir")
+            try:
+                self.debug_tab.add_msg("   trying to use os.system(importfile mymodel.xml)")
+                os.system("importfile mymodel.xml")
+            except:
+                self.debug_tab.add_msg("   exception on: os.system(importfile mymodel.xml)")
 
-    #-------------------------------------------------
+
+    #-------------------------------------------------------------------------
     def biorobots_nanohub_cb(self):
         print("\n\n\n================ copy/load sample ======================================")
         os.chdir(self.home_dir)

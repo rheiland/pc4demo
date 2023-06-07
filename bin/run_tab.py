@@ -115,7 +115,7 @@ class RunModel(QWidget):
 
         self.vbox.addLayout(hbox)
 
-        self.text = QPlainTextEdit()
+        self.text = QPlainTextEdit()   # this will contain all the normal terminal output from a sim
         self.text.setReadOnly(True)
         self.text.resize(400,900)  # nope
 
@@ -360,7 +360,7 @@ class RunModel(QWidget):
 
     def handle_stdout(self):
         try:
-            self.debug_tab.add_msg("handle_stdout(): ")
+            # self.debug_tab.add_msg("handle_stdout(): ")
             data = self.p.readAllStandardOutput()
             stdout = bytes(data).decode("utf8")
             self.message(stdout)
