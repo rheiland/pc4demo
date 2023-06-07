@@ -765,12 +765,13 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
         if self.nanohub_flag:
             self.download_menu = file_menu.addMenu('Download')
             self.download_config_item = self.download_menu.addAction("Download config.xml", self.download_config_cb)
-            self.download_csv_item = self.download_menu.addAction("Download cells,rules (.csv) data", self.download_csv_cb)
             # self.download_csv_item = self.download_menu.addAction("Download cells,rules (.csv) data", self.download_csv_thread_cb)
-            self.download_rules_item = self.download_menu.addAction("Download rules.txt", self.download_rules_cb)
+            self.download_rules0_item = self.download_menu.addAction("Download rules.csv", self.download_rules_csv_cb)
+            self.download_rules1_item = self.download_menu.addAction("Download rules.txt (if sim completes)", self.download_rules_txt_cb)
             self.download_svg_item = self.download_menu.addAction("Download cell (.svg) data", self.download_svg_cb)
             self.download_mat_item = self.download_menu.addAction("Download full (.mat) data", self.download_full_cb)
             self.download_graph_item = self.download_menu.addAction("Download cell graph (.txt) data", self.download_graph_cb)
+            self.download_csv_item = self.download_menu.addAction("Download all .csv data", self.download_csv_cb)
             # self.download_menu_item.setEnabled(False)
             # self.download_menu.setEnabled(False)
         else:
@@ -1333,9 +1334,9 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                 self.debug_tab.add_msg("   exception on: os.system(exportfile tmpdir/config.xml)")
         return
 
-    def download_rules_cb(self):
+    def download_rules_txt_cb(self):
         if self.nanohub_flag:
-            self.debug_tab.add_msg("download_rules_cb() ------------")
+            self.debug_tab.add_msg("download_rules_txt_cb() ------------")
             self.debug_tab.add_msg("        home_dir= "+self.home_dir)
             try:
                 self.debug_tab.add_msg("   trying to use os.system(exportfile tmpdir/rules.txt)")
@@ -1344,28 +1345,39 @@ PhysiCell Studio is provided "AS IS" without warranty of any kind. &nbsp; In no 
                 self.debug_tab.add_msg("   Error: unable to download tmpdir/rules.txt")
         return
 
-    def zip_csv_fn(self):
-        self.debug_tab.add_msg(">>>> in zip_csv_fn()")
-        file_str = os.path.join(self.home_dir,'*.csv')
-        self.debug_tab.add_msg("   files_str="+file_str)
-        files_l = glob.glob(file_str)
-        # self.debug_tab.add_msg("   files_l="+files_l)
-        # file_str = "*.svg"
-        self.debug_tab.add_msg("   next, zip all .csv")
-        with zipfile.ZipFile('csv.zip', 'w') as myzip:
-            for f in glob.glob(file_str):
-                # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-                base_fname = os.path.basename(f)
-                self.debug_tab.add_msg("   base_fname="+base_fname)
-                # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
-                myzip.write(f, base_fname)   # 2nd arg avoids full filename 
-        # self.debug_tab.add_msg("   exportfile doing p.start(csv.zip)")
-        # self.p.start("exportfile csv.zip")
-        try:
-            os.system("exportfile csv.zip")
-        except:
-            self.debug_tab.add_msg("   zip_csv_fn(): exception on os.system(exportfile csv.zip)")
-            print("   zip_csv_fn(): exception on os.system(exportfile csv.zip)")
+    def download_rules_csv_cb(self):
+        if self.nanohub_flag:
+            self.debug_tab.add_msg("download_rules_csv_cb() ------------")
+            self.debug_tab.add_msg("        home_dir= "+self.home_dir)
+            try:
+                self.debug_tab.add_msg("   trying to use os.system(exportfile rules.csv)")
+                os.system("exportfile rules.csv")
+            except:
+                self.debug_tab.add_msg("   Error: unable to download rules.csv")
+        return
+
+    # def zip_csv_fn(self):
+    #     self.debug_tab.add_msg(">>>> in zip_csv_fn()")
+    #     file_str = os.path.join(self.home_dir,'*.csv')
+    #     self.debug_tab.add_msg("   files_str="+file_str)
+    #     files_l = glob.glob(file_str)
+    #     # self.debug_tab.add_msg("   files_l="+files_l)
+    #     # file_str = "*.svg"
+    #     self.debug_tab.add_msg("   next, zip all .csv")
+    #     with zipfile.ZipFile('csv.zip', 'w') as myzip:
+    #         for f in glob.glob(file_str):
+    #             # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+    #             base_fname = os.path.basename(f)
+    #             self.debug_tab.add_msg("   base_fname="+base_fname)
+    #             # myzip.write(f, os.path.basename(f))   # 2nd arg avoids full filename 
+    #             myzip.write(f, base_fname)   # 2nd arg avoids full filename 
+    #     # self.debug_tab.add_msg("   exportfile doing p.start(csv.zip)")
+    #     # self.p.start("exportfile csv.zip")
+    #     try:
+    #         os.system("exportfile csv.zip")
+    #     except:
+    #         self.debug_tab.add_msg("   zip_csv_fn(): exception on os.system(exportfile csv.zip)")
+    #         print("   zip_csv_fn(): exception on os.system(exportfile csv.zip)")
 
     # def download_csv_thread_cb(self):
     #     # Pass the function to execute
